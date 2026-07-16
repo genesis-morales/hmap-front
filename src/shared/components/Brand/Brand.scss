@@ -1,0 +1,26 @@
+@use '@/shared/styles/variables' as *;
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  &--vertical {
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+  }
+
+  &__logo {
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+
+  &__name {
+    font-family: $font-heading;
+    font-weight: 700;
+    color: $color-forest;
+    font-size: 1.05rem;
+    line-height: 1.15;
+  }
+}

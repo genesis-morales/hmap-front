@@ -1,0 +1,64 @@
+@use '@/shared/styles/variables' as *;
+@use '@/shared/styles/mixins' as *;
+
+.hero {
+  position: relative;
+  min-height: 92vh;
+  display: flex;
+  align-items: center;
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  padding-block: 130px 60px;
+
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(20, 35, 26, 0.55) 0%,
+      rgba(20, 35, 26, 0.35) 45%,
+      rgba(20, 35, 26, 0.65) 100%
+    );
+  }
+
+  // Contenido centrado (pantalla 001 del prototipo)
+  &__content {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  &__title {
+    font-family: $font-heading;
+    font-weight: 800;
+    color: #fff;
+    font-size: clamp(2.4rem, 6vw, 4.2rem);
+    line-height: 1.05;
+    max-width: 14ch;
+    margin: 0 auto 16px;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.25);
+  }
+
+  &__subtitle {
+    font-family: $font-label;
+    font-size: clamp(1.05rem, 2vw, 1.4rem);
+    color: rgba(255, 255, 255, 0.92);
+    margin-bottom: 28px;
+  }
+
+  &__cta {
+    padding-inline: 30px;
+    height: 52px;
+    font-size: 1rem;
+  }
+
+  &__search {
+    margin-top: 56px;
+    max-width: 920px;
+    margin-inline: auto;
+    text-align: left;
+  }
+}

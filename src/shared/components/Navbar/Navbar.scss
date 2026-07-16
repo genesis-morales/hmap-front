@@ -1,0 +1,179 @@
+@use '@/shared/styles/variables' as *;
+@use '@/shared/styles/mixins' as *;
+
+.navbar {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 100;
+  padding-block: 18px;
+  padding-inline: 20px;
+  display: flex;
+  justify-content: center;
+  pointer-events: none; // solo la pill captura clics
+
+  @include up($bp-lg) {
+    padding-inline: 40px;
+  }
+
+  // Cápsula flotante
+  &__pill {
+    pointer-events: auto;
+    width: 100%;
+    max-width: $container-max;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    height: 66px;
+    padding-inline: 14px 14px;
+    padding-left: 26px;
+    background: rgba(252, 249, 242, 0.82);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 999px;
+    box-shadow: $shadow-md;
+    transition: box-shadow 0.3s ease, background 0.3s ease;
+  }
+
+  &--scrolled &__pill {
+    background: rgba(252, 249, 242, 0.96);
+    box-shadow: $shadow-lg;
+  }
+
+  &__wordmark {
+    font-family: $font-heading;
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: $color-forest;
+    white-space: nowrap;
+
+    &:hover {
+      color: $color-forest;
+    }
+  }
+
+  &__links {
+    display: none;
+    gap: 4px;
+
+    @include up($bp-lg) {
+      display: flex;
+    }
+  }
+
+  &__link {
+    position: relative;
+    color: $color-text;
+    font-family: $font-label;
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding: 8px 14px;
+    border-radius: 999px;
+    transition: color 0.2s ease, background 0.2s ease;
+
+    // Barra indicadora de sección activa
+    &::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: 2px;
+      width: 0;
+      height: 3px;
+      border-radius: 3px;
+      background: $color-accent;
+      transform: translateX(-50%);
+      transition: width 0.25s ease;
+    }
+
+    &:hover {
+      color: $color-forest;
+      background: rgba(30, 58, 43, 0.05);
+    }
+
+    &--active {
+      color: $color-forest;
+      font-weight: 600;
+
+      &::after {
+        width: 22px;
+      }
+    }
+  }
+
+  &__actions {
+    display: none;
+    align-items: center;
+    gap: 10px;
+
+    @include up($bp-lg) {
+      display: flex;
+    }
+  }
+
+  &__login {
+    display: inline-flex;
+  }
+
+  &__btn {
+    font-family: $font-label;
+    font-weight: 600;
+    height: 42px;
+    padding-inline: 20px;
+    border-radius: 999px !important;
+
+    &--ghost {
+      background: transparent !important;
+      border: 1.5px solid $color-forest !important;
+      color: $color-forest !important;
+
+      &:hover {
+        background: rgba(30, 58, 43, 0.06) !important;
+        border-color: $color-forest !important;
+        color: $color-forest !important;
+      }
+    }
+
+    &--solid {
+      background: $color-forest !important;
+      border: 1.5px solid $color-forest !important;
+      color: #fff !important;
+
+      &:hover {
+        background: $color-forest-deep !important;
+        border-color: $color-forest-deep !important;
+      }
+    }
+  }
+
+  &__burger {
+    display: inline-flex;
+    align-items: center;
+    background: none;
+    border: none;
+    color: $color-forest;
+    font-size: 1.4rem;
+    cursor: pointer;
+    padding: 6px;
+
+    @include up($bp-lg) {
+      display: none;
+    }
+  }
+
+  &__drawer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  &__drawer-link {
+    font-family: $font-label;
+    font-weight: 500;
+    color: $color-text;
+    font-size: 1.05rem;
+
+    &:hover {
+      color: $color-accent;
+    }
+  }
+}

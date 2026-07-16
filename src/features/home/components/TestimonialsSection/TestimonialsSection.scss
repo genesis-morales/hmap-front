@@ -1,0 +1,33 @@
+@use '@/shared/styles/variables' as *;
+@use '@/shared/styles/mixins' as *;
+
+.testimonials {
+  background: $color-forest-deep;
+
+  &__header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  &__eyebrow {
+    color: #f2b53c;
+  }
+
+  &__title {
+    font-family: $font-heading;
+    font-weight: 700;
+    color: #fff;
+    font-size: clamp(1.9rem, 3vw, 2.6rem);
+    margin: 0;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+
+    @include up($bp-md) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+}

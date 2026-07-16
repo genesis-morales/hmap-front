@@ -1,0 +1,49 @@
+@use '@/shared/styles/variables' as *;
+@use '@/shared/styles/mixins' as *;
+
+.auth-card {
+  width: 100%;
+  max-width: 460px;
+  background: $color-surface;
+  border-radius: $radius-xl;
+  box-shadow: $shadow-lg;
+  overflow: hidden;
+
+  &__body {
+    padding: 44px 40px 36px;
+
+    @include down($bp-sm) {
+      padding: 36px 24px 28px;
+    }
+  }
+
+  &__brand {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  &__logo {
+    width: 72px;
+    height: 72px;
+    object-fit: contain;
+    margin: 0 auto 12px;
+  }
+
+  &__title {
+    font-family: $font-heading;
+    font-weight: 800;
+    color: $color-forest;
+    font-size: 1.9rem;
+    line-height: 1.1;
+    margin: 0;
+  }
+
+  &__strip {
+    @include label-caps;
+    text-align: center;
+    color: $color-muted;
+    background: $color-bg-alt;
+    padding: 14px;
+    font-size: 0.68rem;
+  }
+}

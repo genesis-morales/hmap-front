@@ -1,0 +1,57 @@
+@use '@/shared/styles/variables' as *;
+
+.testimonial-card {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: $radius-lg;
+  padding: 30px 28px;
+  backdrop-filter: blur(4px);
+
+  &__stars {
+    display: flex;
+    gap: 4px;
+    color: #f2b53c;
+    margin-bottom: 16px;
+  }
+
+  &__quote {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 24px;
+  }
+
+  &__author {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  &__avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: $color-accent;
+    color: #fff;
+    font-family: $font-label;
+    font-weight: 700;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+
+  &__name {
+    display: block;
+    font-family: $font-heading;
+    color: #fff;
+    font-size: 1rem;
+  }
+
+  &__location {
+    font-family: $font-label;
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 0.85rem;
+  }
+}

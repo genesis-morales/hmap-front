@@ -1,0 +1,61 @@
+@use '@/shared/styles/variables' as *;
+@use '@/shared/styles/mixins' as *;
+
+.about {
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 40px;
+    align-items: center;
+
+    @include up($bp-lg) {
+      grid-template-columns: 1.1fr 1fr;
+      gap: 72px;
+    }
+  }
+
+  &__body {
+    color: $color-text;
+    font-size: 1.05rem;
+    line-height: 1.7;
+  }
+
+  &__link {
+    @include label-caps;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: $color-terracotta;
+    margin-top: 8px;
+
+    &:hover {
+      color: #9a3d27;
+    }
+  }
+
+  &__media {
+    position: relative;
+    display: flex;
+    justify-content: center;
+
+    img {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 480px;
+      border-radius: $radius-lg;
+      box-shadow: $shadow-lg;
+      transform: rotate(2deg);
+      object-fit: cover;
+      aspect-ratio: 4 / 5;
+    }
+  }
+
+  &__glow {
+    position: absolute;
+    inset: 10% -6% -8% 12%;
+    background: radial-gradient(circle at 60% 40%, rgba(229, 132, 60, 0.35), transparent 65%);
+    filter: blur(24px);
+    z-index: 0;
+  }
+}

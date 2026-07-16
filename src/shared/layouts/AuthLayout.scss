@@ -1,0 +1,17 @@
+@use '@/shared/styles/variables' as *;
+@use '@/shared/styles/mixins' as *;
+// Estilos compartidos de los formularios de auth (cargados una sola vez).
+@use '@/features/auth/styles/auth-form';
+
+.auth-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: $color-bg;
+
+  &__main {
+    flex: 1;
+    @include flex-center;
+    padding: 56px 20px;
+  }
+}

@@ -1,0 +1,116 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Manrope:wght@400;500;600;700&family=Public+Sans:wght@600;700;800&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: $font-body;
+  font-size: 16px;
+  line-height: 1.6;
+  color: $color-text;
+  background: $color-bg;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: $font-heading;
+  color: $color-heading;
+  font-weight: 700;
+  line-height: 1.15;
+  margin: 0 0 0.5em;
+}
+
+p {
+  margin: 0 0 1em;
+}
+
+a {
+  color: $color-terracotta;
+  text-decoration: none;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #9a3d27;
+  }
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+// --- Utilidades compartidas ---
+.container {
+  @include container;
+}
+
+.section {
+  @include section-padding;
+}
+
+.eyebrow {
+  @include label-caps;
+  color: $color-terracotta;
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+.section-heading {
+  font-family: $font-heading;
+  font-weight: 700;
+  font-size: clamp(1.9rem, 3vw, 2.6rem);
+  color: $color-heading;
+  margin-bottom: 16px;
+}
+
+.section-subtitle {
+  font-family: $font-label;
+  color: $color-muted;
+  max-width: 640px;
+  font-size: 1.02rem;
+}
+
+// Suave scroll para los anclas del navbar
+html {
+  scroll-behavior: smooth;
+}
+
+// Botón CTA con degradado terracota → naranja (hero + auth)
+.btn-cta.ant-btn {
+  background: $gradient-cta !important;
+  border: none !important;
+  color: #fff !important;
+  font-family: $font-label;
+  font-weight: 600;
+  box-shadow: 0 8px 20px rgba(176, 71, 42, 0.22);
+
+  &:not(:disabled):hover {
+    background: $gradient-cta-hover !important;
+    color: #fff !important;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+  }
+}

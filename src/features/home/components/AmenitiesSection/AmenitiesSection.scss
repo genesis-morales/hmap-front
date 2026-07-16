@@ -1,0 +1,60 @@
+@use '@/shared/styles/variables' as *;
+@use '@/shared/styles/mixins' as *;
+
+.amenities {
+  background: $color-bg-alt;
+
+  &__header {
+    text-align: center;
+    margin-bottom: 44px;
+  }
+
+  &__grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+
+    @include up($bp-sm) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    @include up($bp-lg) {
+      grid-template-columns: repeat(5, 1fr);
+    }
+  }
+
+  &__item {
+    @include flex-center;
+    flex-direction: column;
+    gap: 14px;
+    background: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+    padding: 28px 16px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: $shadow-sm;
+    }
+  }
+
+  &__icon {
+    @include flex-center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: rgba(210, 102, 47, 0.1);
+    color: $color-accent;
+  }
+
+  &__label {
+    @include label-caps;
+    color: $color-forest;
+    font-size: 0.75rem;
+    text-align: center;
+  }
+}

@@ -1,0 +1,100 @@
+@use '@/shared/styles/variables' as *;
+@use '@/shared/styles/mixins' as *;
+
+.room-card {
+  background: $color-surface;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  box-shadow: $shadow-sm;
+  border: 1px solid $color-border;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: $shadow-md;
+  }
+
+  &__media {
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+  }
+
+  &:hover &__media img {
+    transform: scale(1.05);
+  }
+
+  &__body {
+    padding: 22px 22px 24px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  &__name {
+    font-family: $font-heading;
+    font-weight: 700;
+    color: $color-heading;
+    font-size: 1.2rem;
+    margin: 0 0 8px;
+  }
+
+  &__capacity {
+    @include label-caps;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: $color-muted;
+    margin-bottom: 12px;
+  }
+
+  &__tagline {
+    color: $color-text;
+    font-size: 0.98rem;
+    line-height: 1.55;
+    flex: 1;
+    margin-bottom: 20px;
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  &__price {
+    font-family: $font-heading;
+    font-weight: 800;
+    color: $color-forest;
+    font-size: 1.5rem;
+
+    small {
+      font-family: $font-label;
+      font-weight: 500;
+      font-size: 0.8rem;
+      color: $color-muted;
+    }
+  }
+
+  &__cta.ant-btn {
+    border-color: $color-accent;
+    color: $color-accent;
+    font-family: $font-label;
+    font-weight: 600;
+
+    &:hover {
+      background: $color-accent !important;
+      color: #fff !important;
+      border-color: $color-accent !important;
+    }
+  }
+}

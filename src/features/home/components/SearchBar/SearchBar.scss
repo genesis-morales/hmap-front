@@ -1,0 +1,48 @@
+@use '@/shared/styles/variables' as *;
+@use '@/shared/styles/mixins' as *;
+
+.search-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 16px;
+  background: rgba(252, 249, 242, 0.92); // mismo crema translúcido del header
+  backdrop-filter: blur(14px);
+  padding: 20px;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-md;
+
+  .ant-form-item {
+    margin-bottom: 0;
+  }
+
+  &__field {
+    flex: 1 1 180px;
+
+    &--dates {
+      flex: 2 1 300px;
+    }
+  }
+
+  .ant-form-item-label > label {
+    @include label-caps;
+    color: $color-forest;
+    font-size: 0.68rem;
+  }
+
+  &__input {
+    width: 100%;
+  }
+
+  &__submit {
+    flex: 1 1 140px;
+    height: 48px;
+  }
+
+  @include down($bp-md) {
+    &__field,
+    &__submit {
+      flex: 1 1 100%;
+    }
+  }
+}

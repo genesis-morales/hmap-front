@@ -1,0 +1,91 @@
+@use '@/shared/styles/variables' as *;
+@use '@/shared/styles/mixins' as *;
+
+// Estilos compartidos por los formularios de autenticación.
+.auth-form {
+  &__heading {
+    font-family: $font-heading;
+    font-weight: 700;
+    color: $color-heading;
+    font-size: 1.3rem;
+    margin: 0 0 6px;
+  }
+
+  &__subtitle {
+    font-family: $font-label;
+    color: $color-muted;
+    font-size: 0.95rem;
+    margin: 0 0 24px;
+    line-height: 1.5;
+  }
+
+  // Labels de los campos (Manrope semibold mayúsculas)
+  .ant-form-item-label > label {
+    @include label-caps;
+    color: $color-forest;
+    font-size: 0.72rem;
+    height: auto;
+  }
+
+  .ant-input-affix-wrapper,
+  .ant-input {
+    border-radius: $radius-sm;
+  }
+
+  &__prefix-icon {
+    color: $color-muted;
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 20px;
+    font-family: $font-label;
+    font-size: 0.9rem;
+  }
+
+  &__link {
+    color: $color-terracotta;
+    font-weight: 600;
+
+    &:hover {
+      color: #9a3d27;
+    }
+  }
+
+  &__submit {
+    width: 100%;
+    margin-top: 4px;
+  }
+
+  &__divider.ant-divider {
+    @include label-caps;
+    color: $color-muted;
+    font-size: 0.68rem;
+    border-color: $color-border;
+    margin: 26px 0 18px;
+  }
+
+  &__alt {
+    text-align: center;
+    font-family: $font-label;
+    color: $color-text;
+    font-size: 0.95rem;
+    margin: 0;
+  }
+
+  &__back {
+    @include flex-center;
+    gap: 8px;
+    color: $color-terracotta;
+    font-weight: 600;
+    font-family: $font-label;
+    margin-top: 4px;
+
+    &:hover {
+      color: #9a3d27;
+    }
+  }
+}

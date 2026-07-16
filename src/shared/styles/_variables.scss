@@ -1,0 +1,51 @@
+// ============================================================
+//  Design tokens — Hotel Manuel Antonio Park
+//  Derivados de los prototipos oficiales (portal público + auth).
+// ============================================================
+
+// --- Superficie / fondos ---
+$color-bg: #fcf9f2; // base crema del sitio
+$color-bg-alt: #f4f0e7; // tiras / secciones suaves
+$color-surface: #ffffff; // cards
+$color-input-fill: #faf6ee; // relleno de inputs
+
+// --- Marca ---
+$color-forest: #1e3a2b; // verde bosque (títulos, navbar CTA)
+$color-forest-deep: #2c3b29; // fondo sección testimonios
+$color-terracotta: #b5482e; // links, logo, acentos
+$color-accent: #d2662f; // naranja CTA (sólido / antd primary)
+
+// Degradado de los botones principales
+$gradient-cta: linear-gradient(90deg, #b0472a 0%, #e5843c 100%);
+$gradient-cta-hover: linear-gradient(90deg, #9d3e24 0%, #d97833 100%);
+
+// --- Texto ---
+$color-text: #2b2a26; // cuerpo (DM Sans)
+$color-heading: #1e3a2b; // títulos (Public Sans)
+$color-muted: #8a8578; // secundario (Manrope regular)
+$color-border: #e7e1d6; // bordes cálidos
+
+// --- Estado ---
+$color-success: #2f855a;
+$color-error: #c0392b;
+
+// --- Tipografía ---
+$font-heading: 'Public Sans', system-ui, sans-serif; // títulos, bold
+$font-body: 'DM Sans', system-ui, sans-serif; // cuerpo
+$font-label: 'Manrope', system-ui, sans-serif; // labels/badges y secundario
+
+// --- Layout ---
+$container-max: 1200px;
+$radius-sm: 8px;
+$radius-md: 12px;
+$radius-lg: 20px;
+$radius-xl: 28px;
+$shadow-sm: 0 2px 8px rgba(30, 58, 43, 0.06);
+$shadow-md: 0 12px 32px rgba(30, 58, 43, 0.1);
+$shadow-lg: 0 24px 60px rgba(30, 58, 43, 0.14);
+
+// --- Breakpoints ---
+$bp-sm: 640px;
+$bp-md: 768px;
+$bp-lg: 1024px;
+$bp-xl: 1280px;
