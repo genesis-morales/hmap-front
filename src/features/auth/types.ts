@@ -7,6 +7,8 @@ export interface User {
   last_name: string
   email: string
   role: UserRole
+  /** Teléfono de contacto, editable desde el perfil (HU-014). */
+  phone?: string | null
 }
 
 // --- Payloads de request ---
@@ -34,5 +36,9 @@ export interface ResetPasswordRequest {
 // --- Respuestas ---
 export interface AuthResponse {
   token: string
-  user: User
+  /**
+   * El contrato lo define, pero el backend actual solo devuelve { token }:
+   * cuando falta, el FE completa la sesión con GET /auth/me.
+   */
+  user?: User
 }

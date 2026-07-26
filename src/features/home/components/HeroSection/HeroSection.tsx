@@ -1,12 +1,14 @@
 import { Button } from 'antd'
 import { CalendarOutlined } from '@ant-design/icons'
+import { useNavigate } from 'react-router-dom'
 import { SearchBar } from '@/features/home/components/SearchBar/SearchBar'
-import { openReservation } from '@/shared/lib/openReservation'
 import { heroBackground } from '@/features/home/data/images'
 import './HeroSection.scss'
 
 /** HU-001 — Hero de bienvenida con consulta de disponibilidad. */
 export function HeroSection() {
+  const navigate = useNavigate()
+
   return (
     <section id="inicio" className="hero" style={{ backgroundImage: `url(${heroBackground})` }}>
       <div className="hero__overlay" />
@@ -18,7 +20,7 @@ export function HeroSection() {
           size="large"
           className="btn-cta hero__cta"
           icon={<CalendarOutlined />}
-          onClick={openReservation}
+          onClick={() => navigate('/panel')}
         >
           Reservar ahora
         </Button>

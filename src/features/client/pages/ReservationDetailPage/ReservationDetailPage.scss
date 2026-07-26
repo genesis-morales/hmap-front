@@ -1,0 +1,212 @@
+@use '@/shared/styles/variables' as *;
+@use '@/shared/styles/mixins' as *;
+
+.reservation-detail {
+  max-width: 1000px;
+
+  &__breadcrumb {
+    display: flex;
+    gap: 8px;
+    font-family: $font-label;
+    font-size: 0.9rem;
+    color: $color-muted;
+    margin-bottom: 12px;
+  }
+
+  &__header {
+    margin-bottom: 28px;
+
+    h1 {
+      font-size: 2.1rem;
+      margin-bottom: 2px;
+    }
+  }
+
+  &__code {
+    @include label-caps;
+    color: $color-terracotta;
+    font-size: 0.85rem;
+  }
+
+  &__card {
+    display: grid;
+    background: $color-surface;
+    border-radius: $radius-lg;
+    box-shadow: $shadow-sm;
+    overflow: hidden;
+    margin-bottom: 32px;
+
+    @include up($bp-md) {
+      grid-template-columns: 1.7fr 1fr;
+    }
+  }
+
+  &__main {
+    padding: 30px 34px;
+
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 14px;
+    }
+  }
+
+  &__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 26px;
+  }
+
+  &__chip {
+    @include label-caps;
+    letter-spacing: 0.05em;
+    background: $color-bg-alt;
+    color: $color-text;
+    border-radius: 999px;
+    padding: 5px 12px;
+
+    .anticon {
+      margin-right: 5px;
+      color: $color-muted;
+    }
+  }
+
+  &__facts {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px 12px;
+    margin: 0;
+    border-top: 1px solid $color-border;
+    padding-top: 22px;
+
+    @include up($bp-sm) {
+      grid-template-columns: repeat(5, auto);
+      justify-content: start;
+      gap: 12px 36px;
+    }
+
+    dt {
+      @include label-caps;
+      color: $color-muted;
+      margin-bottom: 4px;
+    }
+
+    dd {
+      margin: 0;
+      font-family: $font-label;
+      font-weight: 700;
+      font-size: 1.02rem;
+    }
+  }
+
+  &__status {
+    color: $color-success;
+  }
+
+  &__aside {
+    background: $color-bg-alt;
+    padding: 30px 34px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+  }
+
+  &__price-line {
+    color: $color-muted;
+    font-family: $font-label;
+    font-size: 0.9rem;
+  }
+
+  &__total-label {
+    @include label-caps;
+    color: $color-muted;
+    margin-top: 4px;
+  }
+
+  &__total {
+    font-family: $font-heading;
+    font-size: 2rem;
+    color: $color-heading;
+    margin: 2px 0 20px;
+  }
+
+  &__edit.ant-btn {
+    @include label-caps;
+    letter-spacing: 0.1em;
+    border-color: $color-accent;
+    color: $color-accent;
+    background: transparent;
+
+    &:hover {
+      border-color: $color-terracotta !important;
+      color: $color-terracotta !important;
+    }
+  }
+
+  &__cancel {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: $color-error;
+    font-family: $font-label;
+    font-size: 0.92rem;
+    margin-top: 14px;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__window-note {
+    color: $color-muted;
+    font-family: $font-label;
+    font-size: 0.85rem;
+    margin: 14px 0 0;
+  }
+
+  &__info-grid {
+    display: grid;
+    gap: 28px;
+
+    @include up($bp-md) {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  &__info {
+    background: $color-surface;
+    border-radius: $radius-lg;
+    box-shadow: $shadow-sm;
+    padding: 26px 30px;
+
+    h3 {
+      @include label-caps;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+
+      .anticon {
+        color: $color-terracotta;
+        font-size: 1rem;
+      }
+    }
+
+    p {
+      color: $color-muted;
+      font-size: 0.95rem;
+      margin-bottom: 0;
+    }
+  }
+
+  &__map {
+    width: 100%;
+    height: 180px;
+    border: 0;
+    border-radius: $radius-md;
+    margin-top: 16px;
+  }
+}

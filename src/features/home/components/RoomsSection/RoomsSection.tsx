@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import { RoomCard } from '@/features/home/components/RoomCard/RoomCard'
 import { RoomDetailModal } from '@/features/home/components/RoomDetailModal/RoomDetailModal'
-import { rooms } from '@/features/home/data/rooms'
+import { usePublicRooms } from '@/features/home/hooks/usePublicRooms'
 import type { Room } from '@/features/home/types'
 import './RoomsSection.scss'
 
 /** HU-001 / HU-002 — Listado de habitaciones con detalle en ventana. */
 export function RoomsSection() {
+  const rooms = usePublicRooms()
   const [selected, setSelected] = useState<Room | null>(null)
 
   return (

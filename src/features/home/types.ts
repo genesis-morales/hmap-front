@@ -14,6 +14,8 @@ export interface Room {
   tagline: string
   pricePerNight: number
   images: string[]
+  /** Fotos locales de respaldo por si las del CDN fallan. */
+  fallbackImages?: string[]
   /** Descripción extendida para la vista de detalle. */
   description: string
   bathroom: string[]

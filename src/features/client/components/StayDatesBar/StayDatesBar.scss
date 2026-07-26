@@ -1,0 +1,53 @@
+@use '@/shared/styles/variables' as *;
+@use '@/shared/styles/mixins' as *;
+
+.stay-dates-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  background: $color-surface;
+  border-radius: $radius-md;
+  box-shadow: $shadow-sm;
+  padding: 14px 20px;
+  margin-bottom: 32px;
+  font-family: $font-label;
+
+  &__icon {
+    @include flex-center;
+    width: 36px;
+    height: 36px;
+    border-radius: $radius-sm;
+    background: $color-bg-alt;
+    color: $color-heading;
+  }
+
+  &__dates strong {
+    font-weight: 700;
+  }
+
+  &__arrow {
+    color: $color-accent;
+    margin-inline: 10px;
+  }
+
+  &__divider {
+    width: 1px;
+    height: 22px;
+    background: $color-border;
+
+    @include down($bp-sm) {
+      display: none;
+    }
+  }
+
+  &__nights {
+    color: $color-accent;
+    font-weight: 700;
+  }
+
+  &__change {
+    margin-left: auto;
+    font-weight: 600;
+  }
+}
