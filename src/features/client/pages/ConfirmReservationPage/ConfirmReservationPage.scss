@@ -1,0 +1,266 @@
+@use '@/shared/styles/variables' as *;
+@use '@/shared/styles/mixins' as *;
+
+.confirm-reservation {
+  max-width: 1120px;
+
+  &__header {
+    margin-bottom: 28px;
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 4px;
+    }
+
+    p {
+      color: $color-muted;
+      margin: 0;
+    }
+  }
+
+  &__grid {
+    display: grid;
+    gap: 32px;
+
+    @include up($bp-lg) {
+      grid-template-columns: minmax(0, 1.9fr) minmax(300px, 1fr);
+      align-items: start;
+    }
+  }
+
+  &__error {
+    color: $color-error;
+  }
+
+  &__room {
+    display: grid;
+    background: $color-surface;
+    border-radius: $radius-lg;
+    box-shadow: $shadow-sm;
+    overflow: hidden;
+    margin-bottom: 28px;
+
+    @include up($bp-md) {
+      grid-template-columns: 250px 1fr;
+    }
+  }
+
+  &__photo {
+    min-height: 210px;
+
+    @include down($bp-md) {
+      height: 190px;
+    }
+  }
+
+  &__room-body {
+    padding: 24px 28px;
+
+    h2 {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+    }
+  }
+
+  &__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
+
+    span {
+      @include label-caps;
+      letter-spacing: 0.04em;
+      text-transform: none;
+      background: $color-bg-alt;
+      border-radius: 999px;
+      padding: 5px 12px;
+      font-size: 0.82rem;
+      color: $color-text;
+    }
+  }
+
+  &__dates {
+    color: $color-text;
+    font-family: $font-label;
+    margin-bottom: 18px;
+
+    .anticon {
+      color: $color-muted;
+      margin-right: 6px;
+    }
+  }
+
+  &__room-total {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+    border-top: 1px solid $color-border;
+    padding-top: 14px;
+    color: $color-muted;
+    font-family: $font-label;
+    font-size: 0.92rem;
+
+    > div {
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+    }
+
+    strong {
+      font-family: $font-heading;
+      font-size: 1.6rem;
+      color: $color-terracotta;
+    }
+  }
+
+  &__total-label {
+    @include label-caps;
+    color: $color-muted;
+  }
+
+  &__client {
+    background: $color-surface;
+    border-radius: $radius-lg;
+    box-shadow: $shadow-sm;
+    padding: 24px 28px;
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+
+      h3 {
+        font-size: 1.05rem;
+        margin: 0;
+
+        .anticon {
+          margin-right: 8px;
+          color: $color-muted;
+        }
+      }
+
+      a {
+        font-family: $font-label;
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+    }
+  }
+
+  &__client-grid {
+    display: grid;
+    gap: 20px;
+
+    @include up($bp-sm) {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    > div {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+  }
+
+  &__field-label {
+    @include label-caps;
+    color: $color-muted;
+  }
+
+  &__summary {
+    background: $color-bg-alt;
+    border-radius: $radius-lg;
+    padding: 26px 28px;
+    margin-bottom: 24px;
+
+    h3 {
+      font-size: 1.15rem;
+      margin-bottom: 18px;
+    }
+
+    dl {
+      margin: 0 0 16px;
+
+      > div {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 10px;
+        font-family: $font-label;
+        font-size: 0.95rem;
+      }
+
+      dt {
+        color: $color-muted;
+      }
+
+      dd {
+        margin: 0;
+        font-weight: 600;
+      }
+    }
+  }
+
+  &__grand-total {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    border-top: 1px solid $color-border;
+    padding-top: 14px;
+    margin-bottom: 20px;
+
+    span {
+      font-family: $font-heading;
+      font-weight: 700;
+      color: $color-heading;
+      font-size: 1.05rem;
+    }
+
+    strong {
+      font-family: $font-heading;
+      font-size: 1.6rem;
+      color: $color-terracotta;
+    }
+  }
+
+  &__back {
+    display: block;
+    text-align: center;
+    margin-top: 14px;
+    font-family: $font-label;
+    font-size: 0.92rem;
+  }
+
+  &__help {
+    border: 1.5px dashed $color-border;
+    border-radius: $radius-lg;
+    padding: 26px 28px;
+    text-align: center;
+    color: $color-muted;
+    font-family: $font-label;
+
+    h4 {
+      font-size: 1.05rem;
+      margin-bottom: 6px;
+    }
+
+    p {
+      font-size: 0.92rem;
+      margin-bottom: 12px;
+    }
+
+    a {
+      font-weight: 600;
+      text-decoration: underline;
+    }
+  }
+
+  &__help-icon {
+    font-size: 1.7rem;
+    color: $color-muted;
+    margin-bottom: 10px;
+  }
+}

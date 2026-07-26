@@ -23,7 +23,7 @@ Comportamientos ya implementados en el FE que la API debe tener en cuenta:
   Debe venir en español y ser apto para mostrarse tal cual
   (ej. `{ "message": "La habitación ya no está disponible en esas fechas." }`).
 - **Timeout:** el FE corta peticiones a los **15 segundos**; los endpoints deben
-  responder dentro de ese margen (relevante para disponibilidad y dashboard).
+  responder dentro de ese margen (relevante para disponibilidad y panel de recepción).
 - **CORS:** en desarrollo el FE corre en Vite (`http://localhost:5173`);
   la API debe permitir ese origen con el header `Authorization`.
 - **Sesión al cargar:** al abrir la app, si hay token el FE llama `GET /auth/me`
@@ -37,11 +37,15 @@ Comportamientos ya implementados en el FE que la API debe tener en cuenta:
 
 | Método | Ruta | Descripción |
 |---|---|---|
-| POST | `/auth/register` | Registro → `{ token, user }` |
-| POST | `/auth/login` | Login → `{ token, user }` |
+| POST | `/auth/register` | Registro → `{ token }` * |
+| POST | `/auth/login` | Login → `{ token }` * |
 | GET | `/auth/me` | Usuario del token vigente → `User` |
 | POST | `/auth/forgot-password` | Envía enlace de recuperación |
 | POST | `/auth/reset-password` | `{ token, password }` |
+
+\* La implementación devuelve solo `{ token }` (sin `user`); el FE completa la
+sesión llamando `GET /auth/me` inmediatamente después. Si algún día la API
+incluye `user` en la respuesta, el FE lo usa directo y se ahorra esa llamada.
 
 ```ts
 User = {
@@ -57,7 +61,11 @@ User = {
 
 ---
 
-## Entregable 2 — Portal Cliente + Reservas
+## Entregable 2 — Portal Cliente + Reservas ✅ (API implementada)
+
+> Implementación documentada en [E2-RESERVAS.md](./E2-RESERVAS.md). Decisiones tomadas:
+> estado inicial de reserva = `PENDIENTE`; imágenes en Cloudinary (URLs absolutas en BD);
+> ventana de edición/cancelación configurable (`RESERVATION_EDIT_WINDOW_HOURS`, default 48 h).
 
 ### Perfil (HU-014, HU-015)
 
@@ -153,11 +161,11 @@ Reglas de negocio (viven en la API; el FE solo refleja los flags):
 
 Todas las rutas requieren rol `RECEPCIONISTA` o `ADMINISTRADOR`.
 
-### Dashboard y operación (HU-016 → HU-019)
+### Panel de recepción y operación (HU-016 → HU-019)
 
 | Método | Ruta | Descripción |
 |---|---|---|
-| GET | `/dashboard/occupancy` | `{ occupied, available, maintenance, total }` |
+| GET | `/panel-reception/occupancy` | `{ occupied, available, maintenance, total }` |
 | GET | `/reservations/today` | `{ check_ins: Reservation[], check_outs: Reservation[] }` |
 | POST | `/reservations/:id/check-in` | Estado → `CHECK_IN`; habitación → `OCUPADA` |
 | POST | `/reservations/:id/check-out` | Estado → `CHECK_OUT`; habitación → `DISPONIBLE` |
@@ -202,5 +210,5 @@ Cierre transversal: revisión de autorización por rol en **todos** los endpoint
 | Entregable | Endpoints nuevos | Núcleo |
 |---|---|---|
 | E2 | 10 | Modelo de habitaciones en BD + motor de disponibilidad/reservas + 2 correos |
-| E3 | 10 | Estados operativos (check-in/out), reservas manuales, CRUD habitaciones, métricas |
+| E3 | 10 | Estados operativos (check-in/out), reservas manuales, CRUD habitaciones, métricas (`/panel-reception`) |
 | E4 | 4 | Gestión de usuarios y autorización por rol consolidada |

@@ -24,6 +24,14 @@ Convención: ver contrato de endpoints en [api-contrato.md](./api-contrato.md).
 
 El corazón del sistema: el cliente puede buscar disponibilidad, reservar y gestionar sus reservas. Incluye la base de datos de habitaciones (necesaria para calcular disponibilidad) aunque su CRUD administrativo llega en el Entregable 3.
 
+> **Estado:** API ✅ completada (ver [E2-RESERVAS.md](./E2-RESERVAS.md)) · FE ✅ completado.
+>
+> FE cubierto: layout del panel + ruta protegida por rol (`RequireAuth`), inicio del portal (HU-007),
+> disponibilidad compartida público/panel con persistencia por login (RF-006/RNF-006), confirmación
+> (HU-009), listado/detalle/edición/cancelación de reservas (HU-010→013), perfil y cambio de
+> contraseña (HU-014/015). Imágenes de habitaciones: el FE ya consume `/rooms`; el servido definitivo
+> vía CDN (`IMAGES_BASE_URL`) se resuelve en backend, con respaldo local por `slug` en el FE.
+
 | Área | Alcance |
 |---|---|
 | **FE** | Layout del panel cliente + ruta protegida por rol. Inicio del portal (HU-007). Perfil y cambio de contraseña. Buscador de disponibilidad **compartido** entre portal público (RF-006) y panel cliente (HU-008), con persistencia de la selección previa al pasar por login (RNF-006). Flujo de confirmación de reserva. Listado, detalle, edición y cancelación de reservas propias. |
@@ -45,12 +53,12 @@ Operación interna diaria: ocupación, calendario, check-in/out, reservas manual
 
 | Área | Alcance |
 |---|---|
-| **FE** | Layout del panel interno (compartible con el panel admin del E4). Dashboard de ocupación en tiempo real. Calendario de reservas (mensual/diario). Lista de check-ins/check-outs del día + registro de check-in/out. Tabla global de reservas con búsqueda y filtros; crear/editar/cancelar reserva manual. CRUD de habitaciones y cambio de estado (disponible/ocupada/mantenimiento). |
-| **API** | Métricas de ocupación. Consulta de reservas global (filtros por nombre, id, fechas). Reservas manuales (creación a nombre de un cliente). Check-in/check-out con transición de estado de habitación. CRUD completo de habitaciones + estados, con regla de no eliminar habitaciones con transacciones activas. Correo de reserva manual. |
+| **FE** | Layout del panel interno (compartible con el panel admin del E4). Panel de recepción con ocupación en tiempo real. Calendario de reservas (mensual/diario). Lista de check-ins/check-outs del día + registro de check-in/out. Tabla global de reservas con búsqueda y filtros; crear/editar/cancelar reserva manual. CRUD de habitaciones y cambio de estado (disponible/ocupada/mantenimiento). |
+| **API** | Métricas de ocupación (`/panel-reception/occupancy`). Consulta de reservas global (filtros por nombre, id, fechas). Reservas manuales (creación a nombre de un cliente). Check-in/check-out con transición de estado de habitación. CRUD completo de habitaciones + estados, con regla de no eliminar habitaciones con transacciones activas. Correo de reserva manual. |
 
 **HU:** HU-016 → HU-029, HU-037
 **RF:** RF-011, RF-012, RF-013, RF-014 (+ parte de RF-016)
-**RNF foco:** RNF-004 (rendimiento del dashboard/calendario)
+**RNF foco:** RNF-004 (rendimiento del panel de recepción/calendario)
 
 **Dependencias clave:** requiere el motor de reservas del E2 (misma entidad, se agregan estados operativos: check-in, check-out).
 
@@ -64,7 +72,11 @@ Gestión de usuarios internos, control de acceso por roles consolidado y cierre 
 |---|---|
 | **FE** | Panel admin: listado de usuarios, crear/editar usuario interno, asignación de rol, activar/desactivar cuenta. Guardas de ruta por rol consolidadas (CLIENTE / RECEPCIONISTA / ADMINISTRADOR). Pulido responsive y de usabilidad transversal. |
 | **API** | CRUD de usuarios internos, asignación de roles, activación/suspensión. Autorización por rol en todos los endpoints (revisión transversal). |
-| **Cierre** | Verificación de RNFs: seguridad y control de acceso (RNF-001), usabilidad (RNF-002), responsive (RNF-003), rendimiento (RNF-004), disponibilidad (RNF-005). Pruebas de flujo completo y documentación final. |
+| **Cierre** | Verificación de RNFs: seguridad y control de acceso (RNF-001), usabilidad (RNF-002), responsive (RNF-003), rendimiento (RNF-004), disponibilidad (RNF-005). Pruebas de flujo completo y documentación final. Nota: el panel de recepción usa la ruta `/panel-reception` (no `/dashboard`). |
+
+**Tareas técnicas diferidas del E2** (detectadas en la revisión de legibilidad; se cierran aquí por ser transversales de calidad/seguridad):
+- Introducir runner de pruebas (Vitest + Testing Library) y cubrir la lógica pura del E2 —`staySearch`, `stay`, `reservationUi`— y el flujo RNF-006 (búsqueda que sobrevive al login).
+- Centralizar el manejo de `401`: redirigir a login y/o limpiar el `user` del `AuthContext` para que la sesión expirada se refleje de inmediato (hoy el interceptor solo borra el token). Parte del cierre de RNF-001.
 
 **HU:** HU-030, HU-031, HU-032, HU-033, HU-034
 **RF:** RF-015
@@ -77,7 +89,7 @@ Gestión de usuarios internos, control de acceso por roles consolidado y cierre 
 | Entregable | HU | RF | Estado |
 |---|---|---|---|
 | E1 — Público + Auth | 001–006, 038 | 001–005 | ✅ Completado |
-| E2 — Portal Cliente + Reservas | 007–015, 035, 036 | 006–010, 016* | Pendiente |
+| E2 — Portal Cliente + Reservas | 007–015, 035, 036 | 006–010, 016* | ✅ Completado |
 | E3 — Panel Recepcionista | 016–029, 037 | 011–014, 016* | Pendiente |
 | E4 — Panel Admin + Cierre | 030–034 | 015 | Pendiente |
 

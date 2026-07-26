@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { App, Button, Checkbox, Divider, Form, Input } from 'antd'
 import { LockOutlined, MailOutlined } from '@ant-design/icons'
 import { AuthCard } from '@/features/auth/components/AuthCard/AuthCard'
@@ -15,15 +15,20 @@ interface LoginForm extends LoginRequest {
 export function LoginPage() {
   const { login } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
   const { message } = App.useApp()
   const [loading, setLoading] = useState(false)
+
+  // Ruta previa conservada por RequireAuth (RNF-006: la búsqueda
+  // de disponibilidad viaja en la query y se retoma tras el login).
+  const from = (location.state as { from?: string } | null)?.from
 
   const onFinish = async (values: LoginForm) => {
     setLoading(true)
     try {
       await login({ email: values.email, password: values.password })
       message.success('¡Bienvenido de vuelta!')
-      navigate('/panel')
+      navigate(from ?? '/panel', { replace: true })
     } catch (error) {
       message.error(getErrorMessage(error, 'Correo o contraseña incorrectos.'))
     } finally {
@@ -89,7 +94,11 @@ export function LoginPage() {
 
         <p className="auth-form__alt">
           ¿No tiene una cuenta?{' '}
-          <Link to="/registro" className="auth-form__link">
+          <Link
+            to="/registro"
+            state={from ? { from } : undefined}
+            className="auth-form__link"
+          >
             Regístrese ahora
           </Link>
         </p>

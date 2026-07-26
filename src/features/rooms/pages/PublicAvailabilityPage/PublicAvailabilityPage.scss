@@ -1,0 +1,14 @@
+@use '@/shared/styles/variables' as *;
+@use '@/shared/styles/mixins' as *;
+
+.public-availability {
+  max-width: 1000px;
+  margin-inline: auto;
+  // Deja libre la navbar flotante (66px de pill + márgenes)
+  padding: 128px 20px 72px;
+  min-height: 70vh;
+
+  @include up($bp-lg) {
+    padding-inline: 40px;
+  }
+}

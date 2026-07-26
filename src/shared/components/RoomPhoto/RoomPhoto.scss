@@ -1,0 +1,19 @@
+@use '@/shared/styles/variables' as *;
+@use '@/shared/styles/mixins' as *;
+
+.room-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+  &--empty {
+    @include flex-center;
+    background: repeating-radial-gradient(
+      circle at 12px 12px,
+      #e9e4d8 0 1.5px,
+      $color-bg-alt 1.5px 22px
+    );
+    color: $color-muted;
+    font-size: 1.6rem;
+  }
+}

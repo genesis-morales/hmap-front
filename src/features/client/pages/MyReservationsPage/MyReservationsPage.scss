@@ -1,0 +1,191 @@
+@use '@/shared/styles/variables' as *;
+@use '@/shared/styles/mixins' as *;
+
+.my-reservations {
+  max-width: 1000px;
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 4px;
+    }
+
+    p {
+      color: $color-muted;
+      margin: 0;
+    }
+  }
+
+  &__tabs {
+    display: flex;
+    gap: 4px;
+    border-bottom: 1px solid $color-border;
+    margin-bottom: 28px;
+    overflow-x: auto;
+  }
+
+  &__tab {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: $font-label;
+    font-size: 0.98rem;
+    font-weight: 500;
+    color: $color-muted;
+    padding: 10px 18px;
+    border-bottom: 2.5px solid transparent;
+    margin-bottom: -1px;
+    white-space: nowrap;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: $color-terracotta;
+    }
+
+    &--active {
+      color: $color-terracotta;
+      font-weight: 700;
+      border-bottom-color: $color-terracotta;
+    }
+  }
+
+  &__card {
+    display: grid;
+    background: $color-surface;
+    border-radius: $radius-lg;
+    box-shadow: $shadow-sm;
+    overflow: hidden;
+    margin-bottom: 26px;
+
+    @include up($bp-md) {
+      grid-template-columns: 258px 1fr;
+    }
+
+    &--cancelled {
+      .my-reservations__photo :is(img, .room-photo--empty),
+      h2,
+      .my-reservations__dates {
+        filter: grayscale(0.5);
+        opacity: 0.65;
+      }
+    }
+  }
+
+  &__photo {
+    min-height: 100%;
+
+    @include down($bp-md) {
+      height: 190px;
+    }
+  }
+
+  &__body {
+    padding: 24px 28px 18px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+
+    h2 {
+      font-size: 1.3rem;
+      margin-bottom: 6px;
+    }
+  }
+
+  &__dates {
+    color: $color-muted;
+    font-family: $font-label;
+    font-size: 0.93rem;
+    margin: 0;
+
+    .anticon {
+      margin-right: 6px;
+    }
+  }
+
+  &__nights {
+    margin-left: 8px;
+  }
+
+  &__meta {
+    display: flex;
+    gap: 56px;
+    margin: 18px 0 10px;
+
+    > div {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+  }
+
+  &__meta-label {
+    @include label-caps;
+    color: $color-muted;
+  }
+
+  &__code {
+    font-family: $font-label;
+    font-weight: 700;
+    font-size: 1.05rem;
+  }
+
+  &__total {
+    font-family: $font-heading;
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: $color-terracotta;
+  }
+
+  &__actions {
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid $color-border;
+    text-align: right;
+
+    a {
+      font-family: $font-label;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+  }
+
+  &__footer {
+    text-align: center;
+    color: $color-muted;
+    font-family: $font-label;
+    font-size: 0.92rem;
+
+    span {
+      display: block;
+      margin-bottom: 8px;
+    }
+  }
+
+  &__more {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: $color-text;
+    font-family: $font-label;
+    font-weight: 600;
+    text-decoration: underline;
+    font-size: 0.98rem;
+
+    &:hover {
+      color: $color-terracotta;
+    }
+  }
+}

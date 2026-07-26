@@ -1,21 +1,23 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Button, Drawer } from 'antd'
 import { LoginOutlined, MenuOutlined } from '@ant-design/icons'
-import { openReservation } from '@/shared/lib/openReservation'
 import { hotel } from '@/shared/config/hotel'
 import './Navbar.scss'
 
+// href con "/" al inicio: en la home el navegador solo hace scroll,
+// y desde otras páginas públicas (p. ej. /disponibilidad) vuelve a la home.
 const NAV_LINKS = [
-  { label: 'Inicio', href: '#inicio', id: 'inicio' },
-  { label: 'Habitaciones', href: '#habitaciones', id: 'habitaciones' },
-  { label: 'Comodidades', href: '#comodidades', id: 'comodidades' },
-  { label: 'Testimonios', href: '#testimonios', id: 'testimonios' },
-  { label: 'Galería', href: '#galeria', id: 'galeria' },
+  { label: 'Inicio', href: '/#inicio', id: 'inicio' },
+  { label: 'Habitaciones', href: '/#habitaciones', id: 'habitaciones' },
+  { label: 'Comodidades', href: '/#comodidades', id: 'comodidades' },
+  { label: 'Testimonios', href: '/#testimonios', id: 'testimonios' },
+  { label: 'Galería', href: '/#galeria', id: 'galeria' },
 ]
 
 /** Barra de navegación flotante del portal público. */
 export function Navbar() {
+  const navigate = useNavigate()
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [activeId, setActiveId] = useState('inicio')
@@ -51,7 +53,7 @@ export function Navbar() {
   return (
     <header className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`}>
       <div className="navbar__pill">
-        <a href="#inicio" className="navbar__wordmark" aria-label="Inicio">
+        <a href="/#inicio" className="navbar__wordmark" aria-label="Inicio">
           {hotel.name}
         </a>
 
@@ -70,7 +72,7 @@ export function Navbar() {
         </nav>
 
         <div className="navbar__actions">
-          <Link to="/login" target="_blank" rel="noopener" className="navbar__login">
+          <Link to="/login" className="navbar__login">
             <Button className="navbar__btn navbar__btn--ghost" icon={<LoginOutlined />}>
               Ingresar
             </Button>
@@ -78,7 +80,7 @@ export function Navbar() {
           <Button
             type="primary"
             className="navbar__btn navbar__btn--solid"
-            onClick={openReservation}
+            onClick={() => navigate('/panel')}
           >
             Reservar ahora
           </Button>
@@ -111,7 +113,7 @@ export function Navbar() {
               {link.label}
             </a>
           ))}
-          <Link to="/login" target="_blank" rel="noopener" onClick={() => setMenuOpen(false)}>
+          <Link to="/login" onClick={() => setMenuOpen(false)}>
             <Button block icon={<LoginOutlined />}>
               Ingresar
             </Button>
@@ -122,7 +124,7 @@ export function Navbar() {
             className="navbar__btn navbar__btn--solid"
             onClick={() => {
               setMenuOpen(false)
-              openReservation()
+              navigate('/panel')
             }}
           >
             Reservar ahora

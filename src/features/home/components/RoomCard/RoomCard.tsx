@@ -1,5 +1,6 @@
 import { Button } from 'antd'
 import { TeamOutlined } from '@ant-design/icons'
+import { RoomPhoto } from '@/shared/components/RoomPhoto/RoomPhoto'
 import type { Room } from '@/features/home/types'
 import './RoomCard.scss'
 
@@ -14,7 +15,11 @@ export function RoomCard({ room, onOpen }: RoomCardProps) {
   return (
     <article className="room-card">
       <div className="room-card__media">
-        <img src={room.images[0]} alt={room.name} loading="lazy" />
+        <RoomPhoto
+          src={room.images[0]}
+          fallbackSrc={room.fallbackImages?.[0]}
+          alt={room.name}
+        />
       </div>
       <div className="room-card__body">
         <h3 className="room-card__name">{room.name}</h3>

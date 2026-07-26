@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { App, Button, Col, Divider, Form, Input, Row } from 'antd'
 import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons'
 import { AuthCard } from '@/features/auth/components/AuthCard/AuthCard'
@@ -18,8 +18,12 @@ interface RegisterForm {
 export function RegisterPage() {
   const { register } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
   const { message } = App.useApp()
   const [loading, setLoading] = useState(false)
+
+  // Igual que en login: retoma la ruta previa (RNF-006).
+  const from = (location.state as { from?: string } | null)?.from
 
   const onFinish = async (values: RegisterForm) => {
     setLoading(true)
@@ -31,7 +35,7 @@ export function RegisterPage() {
         password: values.password,
       })
       message.success('¡Cuenta creada con éxito!')
-      navigate('/panel')
+      navigate(from ?? '/panel', { replace: true })
     } catch (error) {
       message.error(getErrorMessage(error, 'No se pudo crear la cuenta.'))
     } finally {
@@ -136,11 +140,15 @@ export function RegisterPage() {
           Crear cuenta
         </Button>
 
-        <Divider className="auth-form__divider">Ya es huésped</Divider>
+        <Divider className="auth-form__divider">Ya es cliente</Divider>
 
         <p className="auth-form__alt">
           ¿Ya tiene una cuenta?{' '}
-          <Link to="/login" className="auth-form__link">
+          <Link
+            to="/login"
+            state={from ? { from } : undefined}
+            className="auth-form__link"
+          >
             Inicie sesión
           </Link>
         </p>
