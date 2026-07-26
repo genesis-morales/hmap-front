@@ -72,8 +72,8 @@
 ## 4. Módulo: Panel Recepcionista
 ### Actor: Recepcionista
 
-### Gestión de Operaciones y Dashboard
-* **HU-016: Ver dashboard ocupación:** Visualizar en tiempo real el resumen analítico de habitaciones ocupadas, libres y en mantenimiento.
+### Gestión de Operaciones y Panel de Recepción
+* **HU-016: Ver panel de recepción (ocupación):** Visualizar en tiempo real el resumen analítico de habitaciones ocupadas, libres y en mantenimiento.
 * **HU-017: Ver calendario de reservas:** Consultar de forma gráfica la planificación de reservas mensuales y diarias.
 * **HU-018: Ver check-ins y check-outs del día:** Monitorear el listado de entradas y salidas programadas para la fecha actual.
 * **HU-019: Registrar check-in y check-out:** Formalizar físicamente el ingreso o la salida del huésped, cambiando el estado operativo de la habitación.

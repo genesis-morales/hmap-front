@@ -1,0 +1,39 @@
+@use '@/shared/styles/variables' as *;
+@use '@/shared/styles/mixins' as *;
+
+.status-tag {
+  @include label-caps;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  white-space: nowrap;
+
+  &__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  &--success {
+    background: #e3f2e8;
+    color: #2f855a;
+  }
+
+  &--warning {
+    background: #fbf0dc;
+    color: #b07816;
+  }
+
+  &--danger {
+    background: #fbe4e1;
+    color: #c0392b;
+  }
+
+  &--neutral {
+    background: #efece4;
+    color: $color-muted;
+  }
+}

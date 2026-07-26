@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Button, Image, Modal } from 'antd'
 import {
   AppstoreOutlined,
@@ -8,7 +9,6 @@ import {
   StopOutlined,
   TeamOutlined,
 } from '@ant-design/icons'
-import { openReservation } from '@/shared/lib/openReservation'
 import type { Room } from '@/features/home/types'
 import './RoomDetailModal.scss'
 
@@ -71,9 +71,11 @@ function CheckList({ items }: { items: string[] }) {
 
 /** HU-002 — Detalle de habitación en ventana modal. */
 export function RoomDetailModal({ room, open, onClose }: RoomDetailModalProps) {
+  const navigate = useNavigate()
+
   const reservar = () => {
     onClose()
-    openReservation()
+    navigate('/panel')
   }
 
   return (
@@ -135,7 +137,11 @@ export function RoomDetailModal({ room, open, onClose }: RoomDetailModalProps) {
               <div className="room-modal__thumbs">
                 {room.images.map((src, index) => (
                   <div className="room-modal__thumb" key={src}>
-                    <Image src={src} alt={`${room.name} — foto ${index + 1}`} />
+                    <Image
+                      src={src}
+                      alt={`${room.name} — foto ${index + 1}`}
+                      fallback={room.fallbackImages?.[index] ?? room.fallbackImages?.[0]}
+                    />
                   </div>
                 ))}
               </div>

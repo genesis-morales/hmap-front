@@ -18,6 +18,8 @@ interface AuthContextValue {
   login: (payload: LoginRequest) => Promise<void>
   register: (payload: RegisterRequest) => Promise<void>
   logout: () => void
+  /** Sincroniza el usuario en memoria tras editar el perfil (HU-014). */
+  updateUser: (user: User) => void
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined)
@@ -40,21 +42,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .finally(() => setLoading(false))
   }, [])
 
-  const login = useCallback(async (payload: LoginRequest) => {
-    const { token, user } = await authApi.login(payload)
+  // El backend devuelve { token } (sin user): guarda el token primero
+  // y completa la sesión con GET /auth/me si el user no vino en la respuesta.
+  const startSession = useCallback(async (token: string, user?: User) => {
     localStorage.setItem(TOKEN_STORAGE_KEY, token)
-    setUser(user)
+    setUser(user ?? (await authApi.me()))
   }, [])
 
-  const register = useCallback(async (payload: RegisterRequest) => {
-    const { token, user } = await authApi.register(payload)
-    localStorage.setItem(TOKEN_STORAGE_KEY, token)
-    setUser(user)
-  }, [])
+  const login = useCallback(
+    async (payload: LoginRequest) => {
+      const { token, user } = await authApi.login(payload)
+      await startSession(token, user)
+    },
+    [startSession],
+  )
+
+  const register = useCallback(
+    async (payload: RegisterRequest) => {
+      const { token, user } = await authApi.register(payload)
+      await startSession(token, user)
+    },
+    [startSession],
+  )
 
   const logout = useCallback(() => {
     localStorage.removeItem(TOKEN_STORAGE_KEY)
     setUser(null)
+  }, [])
+
+  const updateUser = useCallback((updated: User) => {
+    setUser(updated)
   }, [])
 
   const value = useMemo<AuthContextValue>(
@@ -65,8 +82,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       login,
       register,
       logout,
+      updateUser,
     }),
-    [user, loading, login, register, logout],
+    [user, loading, login, register, logout, updateUser],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

@@ -14,7 +14,7 @@ function initials(name: string): string {
     .join('')
 }
 
-/** HU-001 — Tarjeta de testimonio de huésped. */
+/** HU-001 — Tarjeta de testimonio de cliente. */
 export function TestimonialCard({ testimonial }: TestimonialCardProps) {
   return (
     <article className="testimonial-card">

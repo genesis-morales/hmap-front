@@ -1,19 +1,35 @@
-import { App, Button, DatePicker, Form, Select } from 'antd'
+import { useNavigate } from 'react-router-dom'
+import { Button, DatePicker, Form, Select } from 'antd'
 import { SearchOutlined } from '@ant-design/icons'
+import dayjs, { type Dayjs } from 'dayjs'
+import { API_DATE_FORMAT } from '@/features/rooms/lib/stay'
+import { toSearchParams } from '@/features/rooms/lib/staySearch'
 import './SearchBar.scss'
 
 const { RangePicker } = DatePicker
 
+interface SearchForm {
+  fechas: [Dayjs, Dayjs]
+  personas: number
+}
+
 /**
- * Barra de consulta de disponibilidad del hero (HU-008 — punto de entrada).
- * La búsqueda real vive en el portal del cliente; aquí guía a la sección de habitaciones.
+ * Barra de consulta de disponibilidad del hero (HU-008 / RF-006).
+ * Lleva a la disponibilidad pública: el visitante ve habitaciones y
+ * precios sin sesión, y el login llega recién al dar "Reservar" (RNF-006).
  */
 export function SearchBar() {
-  const { message } = App.useApp()
+  const navigate = useNavigate()
 
-  const onFinish = () => {
-    message.info('Elige una habitación para continuar con tu reserva.')
-    document.getElementById('habitaciones')?.scrollIntoView({ behavior: 'smooth' })
+  const onFinish = (values: SearchForm) => {
+    const [checkIn, checkOut] = values.fechas
+    navigate(
+      `/disponibilidad?${toSearchParams({
+        check_in: checkIn.format(API_DATE_FORMAT),
+        check_out: checkOut.format(API_DATE_FORMAT),
+        guests: values.personas,
+      })}`,
+    )
   }
 
   return (
@@ -28,12 +44,13 @@ export function SearchBar() {
           className="search-bar__input"
           format="DD/MM/YYYY"
           placeholder={['Llegada', 'Salida']}
+          disabledDate={(d) => d.isBefore(dayjs(), 'day')}
         />
       </Form.Item>
 
       <Form.Item
-        name="huespedes"
-        label="Huéspedes"
+        name="personas"
+        label="Personas"
         className="search-bar__field"
         initialValue={2}
       >
@@ -41,7 +58,7 @@ export function SearchBar() {
           className="search-bar__input"
           options={[1, 2, 3, 4, 5, 6].map((n) => ({
             value: n,
-            label: `${n} ${n === 1 ? 'huésped' : 'huéspedes'}`,
+            label: `${n} ${n === 1 ? 'persona' : 'personas'}`,
           }))}
         />
       </Form.Item>

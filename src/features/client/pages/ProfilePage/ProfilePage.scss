@@ -1,0 +1,110 @@
+@use '@/shared/styles/variables' as *;
+@use '@/shared/styles/mixins' as *;
+
+.profile {
+  max-width: 760px;
+  margin-inline: auto;
+
+  &__title {
+    font-size: 2rem;
+    margin-bottom: 28px;
+  }
+
+  &__card {
+    background: $color-surface;
+    border-radius: $radius-lg;
+    box-shadow: $shadow-sm;
+    padding: 40px clamp(24px, 6vw, 64px);
+    margin-bottom: 32px;
+  }
+
+  &__identity {
+    text-align: center;
+    margin-bottom: 32px;
+
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 4px;
+    }
+  }
+
+  &__avatar {
+    @include flex-center;
+    width: 88px;
+    height: 88px;
+    margin: 0 auto 16px;
+    border-radius: $radius-md;
+    background: $gradient-cta;
+    color: #fff;
+    font-family: $font-heading;
+    font-weight: 700;
+    font-size: 1.8rem;
+  }
+
+  &__caption {
+    @include label-caps;
+    color: $color-muted;
+  }
+
+  &__row {
+    display: grid;
+    gap: 0 20px;
+
+    @include up($bp-sm) {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  &__email-note {
+    display: block;
+    margin-top: 6px;
+    color: $color-muted;
+    font-size: 0.82rem;
+    font-style: italic;
+  }
+
+  &__password-link {
+    display: inline-block;
+    font-family: $font-label;
+    font-weight: 600;
+    margin-bottom: 24px;
+  }
+
+  &__submit {
+    @include label-caps;
+    letter-spacing: 0.14em;
+  }
+
+  &__info-grid {
+    display: grid;
+    gap: 24px;
+
+    @include up($bp-md) {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  &__info {
+    background: $color-bg-alt;
+    border-radius: $radius-lg;
+    padding: 26px 30px;
+
+    h3 {
+      @include label-caps;
+      font-size: 0.85rem;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: $color-muted;
+      font-size: 0.93rem;
+      margin: 0;
+    }
+  }
+
+  &__info-icon {
+    font-size: 1.3rem;
+    color: $color-terracotta;
+    margin-bottom: 12px;
+  }
+}

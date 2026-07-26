@@ -107,3 +107,8 @@ export const rooms: Room[] = [
 export function getRoomBySlug(slug: string): Room | undefined {
   return rooms.find((room) => room.slug === slug)
 }
+
+/** Primera foto local de la habitación; respaldo cuando el CDN falla. */
+export function localRoomImage(slug: string): string | undefined {
+  return getRoomBySlug(slug)?.images[0]
+}
