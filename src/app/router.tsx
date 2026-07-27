@@ -19,6 +19,13 @@ import { ReservationDetailPage } from '@/features/client/pages/ReservationDetail
 import { EditReservationPage } from '@/features/client/pages/EditReservationPage/EditReservationPage'
 import { ProfilePage } from '@/features/client/pages/ProfilePage/ProfilePage'
 import { ChangePasswordPage } from '@/features/client/pages/ChangePasswordPage/ChangePasswordPage'
+import { ReceptionLayout } from '@/features/reception/layout/ReceptionLayout/ReceptionLayout'
+import { OccupancyPanelPage } from '@/features/reception/pages/OccupancyPanelPage/OccupancyPanelPage'
+import { CalendarPage } from '@/features/reception/pages/CalendarPage/CalendarPage'
+import { ReservationsPage } from '@/features/reception/pages/ReservationsPage/ReservationsPage'
+import { CheckInOutPage } from '@/features/reception/pages/CheckInOutPage/CheckInOutPage'
+import { RoomsPage } from '@/features/reception/pages/RoomsPage/RoomsPage'
+import { SearchReservationPage } from '@/features/reception/pages/SearchReservationPage/SearchReservationPage'
 
 export const router = createBrowserRouter([
   {
@@ -61,6 +68,23 @@ export const router = createBrowserRouter([
           { path: 'reservas/:id/editar', element: <EditReservationPage /> },
           { path: 'perfil', element: <ProfilePage /> },
           { path: 'perfil/contrasena', element: <ChangePasswordPage /> },
+        ],
+      },
+      // Panel de Recepcionista (E3) — rol RECEPCIONISTA o ADMINISTRADOR
+      {
+        path: 'panel-reception',
+        element: (
+          <RequireAuth roles={['RECEPCIONISTA', 'ADMINISTRADOR']}>
+            <ReceptionLayout />
+          </RequireAuth>
+        ),
+        children: [
+          { index: true, element: <OccupancyPanelPage /> },
+          { path: 'calendario', element: <CalendarPage /> },
+          { path: 'reservas', element: <ReservationsPage /> },
+          { path: 'check-in-out', element: <CheckInOutPage /> },
+          { path: 'habitaciones', element: <RoomsPage /> },
+          { path: 'buscar', element: <SearchReservationPage /> },
         ],
       },
       { path: '*', element: <Navigate to="/" replace /> },
