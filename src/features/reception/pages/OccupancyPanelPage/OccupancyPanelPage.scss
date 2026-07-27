@@ -1,0 +1,124 @@
+@use '@/shared/styles/variables' as *;
+@use '@/shared/styles/mixins' as *;
+
+.occupancy-panel {
+  &__stats {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(2, 1fr);
+    margin-bottom: 28px;
+
+    @include up($bp-lg) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  &__grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 1fr;
+
+    @include up($bp-lg) {
+      grid-template-columns: 3fr 2fr;
+    }
+  }
+
+  &__card {
+    background: $color-surface;
+    border-radius: $radius-lg;
+    box-shadow: $shadow-sm;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+
+    h2 {
+      font-family: $font-heading;
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: $color-heading;
+    }
+  }
+
+  &__count {
+    @include label-caps;
+    color: $color-muted;
+    background: $color-bg-alt;
+    padding: 4px 10px;
+    border-radius: 999px;
+  }
+
+  &__list {
+    list-style: none;
+    flex: 1;
+  }
+
+  &__row,
+  &__room {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid $color-border;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__row-info,
+  &__room-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.35;
+
+    strong {
+      font-family: $font-label;
+      font-weight: 600;
+      color: $color-heading;
+    }
+
+    span {
+      font-size: 0.85rem;
+      color: $color-muted;
+    }
+  }
+
+  &__card-footer {
+    margin-top: 12px;
+    padding: 14px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: $color-terracotta;
+    font-family: $font-label;
+    font-weight: 600;
+    border-top: 1px solid $color-border;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    &:hover {
+      color: $color-accent;
+    }
+  }
+
+  &__empty,
+  &__error {
+    padding: 20px 0;
+    color: $color-muted;
+    font-family: $font-label;
+  }
+
+  &__error {
+    color: $color-error;
+  }
+}

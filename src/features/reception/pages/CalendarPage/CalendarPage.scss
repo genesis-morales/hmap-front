@@ -1,0 +1,221 @@
+@use '@/shared/styles/variables' as *;
+@use '@/shared/styles/mixins' as *;
+
+.calendar {
+  &__month {
+    text-transform: capitalize;
+  }
+
+  &__nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: 999px;
+    padding: 4px 6px;
+
+    span {
+      font-family: $font-label;
+      font-weight: 600;
+      color: $color-heading;
+      padding: 0 12px;
+      text-transform: capitalize;
+    }
+
+    button {
+      @include flex-center;
+      width: 30px;
+      height: 30px;
+      border: none;
+      background: none;
+      border-radius: 50%;
+      cursor: pointer;
+      color: $color-muted;
+
+      &:hover {
+        background: $color-bg;
+        color: $color-terracotta;
+      }
+    }
+  }
+
+  &__grid-wrap {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 1fr;
+
+    @include up($bp-lg) {
+      grid-template-columns: 3fr 2fr;
+    }
+  }
+
+  &__card,
+  &__day-card {
+    background: $color-surface;
+    border-radius: $radius-lg;
+    box-shadow: $shadow-sm;
+    padding: 24px;
+  }
+
+  &__weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin-bottom: 8px;
+
+    span {
+      @include label-caps;
+      color: $color-muted;
+      text-align: center;
+      padding: 8px 0;
+    }
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+  }
+
+  &__cell {
+    aspect-ratio: 1 / 1;
+    border: none;
+    background: none;
+    cursor: pointer;
+    border-radius: $radius-md;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-family: $font-label;
+    color: $color-text;
+    transition: background 0.15s ease;
+
+    &:hover {
+      background: $color-bg;
+    }
+
+    &--muted {
+      color: $color-border;
+    }
+
+    &--selected {
+      background: $color-terracotta;
+      color: #fff;
+
+      &:hover {
+        background: $color-terracotta;
+      }
+    }
+  }
+
+  &__dots {
+    display: flex;
+    gap: 3px;
+    height: 6px;
+  }
+
+  &__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  &__legend {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid $color-border;
+
+    span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: $font-label;
+      font-size: 0.85rem;
+      color: $color-muted;
+    }
+  }
+
+  &__day-card {
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+
+      h2 {
+        font-family: $font-heading;
+        font-weight: 700;
+        font-size: 1.15rem;
+        color: $color-heading;
+      }
+    }
+  }
+
+  &__day-badge {
+    @include label-caps;
+    background: $color-terracotta;
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 999px;
+  }
+
+  &__day-list {
+    list-style: none;
+
+    li {
+      display: flex;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid $color-border;
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+
+  &__day-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: flex-start;
+
+    strong {
+      font-family: $font-label;
+      font-weight: 600;
+      color: $color-heading;
+    }
+
+    span {
+      font-size: 0.85rem;
+      color: $color-muted;
+    }
+  }
+
+  &__empty {
+    color: $color-muted;
+    font-family: $font-label;
+    padding: 16px 0;
+  }
+
+  &__all-link {
+    display: block;
+    text-align: center;
+    margin-top: 12px;
+    padding-top: 14px;
+    border-top: 1px solid $color-border;
+    color: $color-terracotta;
+    font-family: $font-label;
+    font-weight: 600;
+
+    &:hover {
+      color: $color-accent;
+    }
+  }
+}
