@@ -24,3 +24,10 @@ dist-ssr
 *.sw?
 
 .env
+
+
+# Playwright
+e2e/.auth/
+playwright-report/
+blob-report/
+test-results/
