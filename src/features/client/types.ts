@@ -1,13 +1,32 @@
 import type { Room } from '@/features/rooms/types'
 
-/** Estados de reserva del E2 (E3 agrega CHECK_IN | CHECK_OUT). */
-export type ReservationStatus = 'PENDIENTE' | 'CONFIRMADA' | 'CANCELADA'
+/**
+ * Estados de reserva. E2 definió PENDIENTE/CONFIRMADA/CANCELADA;
+ * E3 agrega los operativos CHECK_IN (huésped en estancia) y CHECK_OUT (salida registrada).
+ */
+export type ReservationStatus =
+  | 'PENDIENTE'
+  | 'CONFIRMADA'
+  | 'CHECK_IN'
+  | 'CHECK_OUT'
+  | 'CANCELADA'
 
-/** Reserva tal como la sirve la API (contrato E2, snake_case). */
+/** Titular de la reserva (añadido en E3: la recepción ve a quién pertenece). */
+export interface Guest {
+  id: number
+  name: string
+  last_name: string
+  email: string
+  phone?: string | null
+}
+
+/** Reserva tal como la sirve la API (contrato E2/E3, snake_case). */
 export interface Reservation {
   id: number
   /** Identificador legible, p. ej. 'RSV-000123'. */
   code: string
+  /** Titular de la reserva (E3). */
+  guest: Guest
   /** Habitación anidada para no pedirla aparte. */
   room: Room
   /** YYYY-MM-DD */

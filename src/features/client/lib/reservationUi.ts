@@ -24,6 +24,8 @@ export const UI_STATUS_LABEL: Record<ReservationUiStatus, string> = {
 export const STATUS_LABEL: Record<ReservationStatus, string> = {
   PENDIENTE: 'Pendiente',
   CONFIRMADA: 'Confirmada',
+  CHECK_IN: 'En estancia',
+  CHECK_OUT: 'Completada',
   CANCELADA: 'Cancelada',
 }
 
