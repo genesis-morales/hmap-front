@@ -4,6 +4,7 @@ import { App, Button, Checkbox, Divider, Form, Input } from 'antd'
 import { LockOutlined, MailOutlined } from '@ant-design/icons'
 import { AuthCard } from '@/features/auth/components/AuthCard/AuthCard'
 import { useAuth } from '@/features/auth/context/AuthContext'
+import { homePathForRole } from '@/features/auth/lib/roleHome'
 import { getErrorMessage } from '@/shared/api/client'
 import type { LoginRequest } from '@/features/auth/types'
 
@@ -26,9 +27,9 @@ export function LoginPage() {
   const onFinish = async (values: LoginForm) => {
     setLoading(true)
     try {
-      await login({ email: values.email, password: values.password })
+      const user = await login({ email: values.email, password: values.password })
       message.success('¡Bienvenido de vuelta!')
-      navigate(from ?? '/panel', { replace: true })
+      navigate(from ?? homePathForRole(user.role), { replace: true })
     } catch (error) {
       message.error(getErrorMessage(error, 'Correo o contraseña incorrectos.'))
     } finally {
