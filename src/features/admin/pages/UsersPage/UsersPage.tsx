@@ -14,6 +14,9 @@ import {
   USER_ACTIVE_TONE,
 } from '@/features/admin/lib/userRole'
 import { useAuth } from '@/features/auth/context/AuthContext'
+import { CreateUserModal } from '@/features/admin/components/CreateUserModal/CreateUserModal'
+import { EditUserModal } from '@/features/admin/components/EditUserModal/EditUserModal'
+import { ToggleActiveModal } from '@/features/admin/components/ToggleActiveModal/ToggleActiveModal'
 import type { AdminUser } from '@/features/admin/types'
 import type { PageResponse } from '@/shared/api/types'
 import './UsersPage.scss'
@@ -33,6 +36,10 @@ export function UsersPage() {
   const [tab, setTab] = useState('TODOS')
   const [page, setPage] = useState(0)
   const [result, setResult] = useState<PageResponse<AdminUser> | null>(null)
+
+  const [createOpen, setCreateOpen] = useState(false)
+  const [editing, setEditing] = useState<AdminUser | null>(null)
+  const [toggling, setToggling] = useState<AdminUser | null>(null)
 
   const activeFilter = TABS.find((t) => t.key === tab)?.active
 
@@ -58,6 +65,11 @@ export function UsersPage() {
   }, [activeFilter, page, message])
 
   useEffect(load, [load])
+
+  const refresh = () => {
+    setPage(0)
+    load()
+  }
 
   /** Verdadero si la fila es del admin logueado (autoprotección). */
   const isSelf = (u: AdminUser) => Boolean(currentUser && u.id === currentUser.id)
@@ -107,7 +119,7 @@ export function UsersPage() {
             className="users__icon users__icon--edit"
             disabled={!canEdit(u)}
             title="Editar"
-            onClick={() => message.info('Modal de edición (pendiente)')}
+            onClick={() => setEditing(u)}
           >
             <EditOutlined />
           </button>
@@ -115,11 +127,7 @@ export function UsersPage() {
             className="users__icon users__icon--delete"
             disabled={isSelf(u)}
             title={u.active ? 'Desactivar' : 'Activar'}
-            onClick={() =>
-              message.info(
-                `Modal de ${u.active ? 'desactivar' : 'activar'} (pendiente)`,
-              )
-            }
+            onClick={() => setToggling(u)}
           >
             <DeleteOutlined />
           </button>
@@ -143,7 +151,7 @@ export function UsersPage() {
             type="primary"
             className="btn-cta"
             icon={<PlusOutlined />}
-            onClick={() => message.info('Modal de crear usuario (pendiente)')}
+            onClick={() => setCreateOpen(true)}
           >
             Nuevo usuario
           </Button>
@@ -186,6 +194,26 @@ export function UsersPage() {
           onChange={(p) => setPage(p - 1)}
         />
       </footer>
+
+      <CreateUserModal
+        open={createOpen}
+        onClose={() => setCreateOpen(false)}
+        onCreated={refresh}
+      />
+
+      <EditUserModal
+        user={editing}
+        open={!!editing}
+        onClose={() => setEditing(null)}
+        onSaved={refresh}
+      />
+
+      <ToggleActiveModal
+        user={toggling}
+        open={!!toggling}
+        onClose={() => setToggling(null)}
+        onToggled={refresh}
+      />
     </div>
   )
 }
