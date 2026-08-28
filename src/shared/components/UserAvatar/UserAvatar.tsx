@@ -1,5 +1,5 @@
-import { getInitials } from '@/features/client/lib/reservationUi'
-import './GuestAvatar.scss'
+import { getInitials } from '@/shared/lib/initials'
+import './UserAvatar.scss'
 
 /** Paleta suave; el color se elige de forma estable a partir del nombre. */
 const PALETTE = [
@@ -10,21 +10,24 @@ const PALETTE = [
   { bg: '#e7e2f2', fg: '#5b4b8a' },
 ]
 
-interface GuestAvatarProps {
+interface UserAvatarProps {
   name: string
   lastName: string
   size?: number
 }
 
-/** Círculo con iniciales del huésped (tablas y listados del panel). */
-export function GuestAvatar({ name, lastName, size = 40 }: GuestAvatarProps) {
+/**
+ * Círculo con iniciales de una persona: huéspedes en las tablas de recepción,
+ * usuarios en la nómina del panel admin.
+ */
+export function UserAvatar({ name, lastName, size = 40 }: UserAvatarProps) {
   const seed = `${name}${lastName}`
   const hash = Array.from(seed).reduce((acc, ch) => acc + ch.charCodeAt(0), 0)
   const color = PALETTE[hash % PALETTE.length]
 
   return (
     <span
-      className="guest-avatar"
+      className="user-avatar"
       style={{
         width: size,
         height: size,

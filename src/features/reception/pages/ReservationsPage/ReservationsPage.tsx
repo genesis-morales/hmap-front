@@ -13,12 +13,12 @@ import type { Dayjs } from 'dayjs'
 import { receptionApi } from '@/features/reception/api/reception.api'
 import { getErrorMessage } from '@/shared/api/client'
 import { Table, type Column } from '@/shared/components/Table/Table'
-import { StatCard } from '@/features/reception/components/StatCard/StatCard'
-import { GuestAvatar } from '@/features/reception/components/GuestAvatar/GuestAvatar'
+import { StatCard } from '@/shared/components/StatCard/StatCard'
+import { UserAvatar } from '@/shared/components/UserAvatar/UserAvatar'
 import { ManualReservationModal } from '@/features/reception/components/ManualReservationModal/ManualReservationModal'
 import { CancelReservationModal } from '@/features/reception/components/CancelReservationModal/CancelReservationModal'
 import { EditReservationModal } from '@/features/reception/components/EditReservationModal/EditReservationModal'
-import { PageHeader } from '@/features/reception/components/PageHeader/PageHeader'
+import { PageHeader } from '@/shared/components/PageHeader/PageHeader'
 import { StatusTag } from '@/features/client/components/StatusTag/StatusTag'
 import { formatStayDate, API_DATE_FORMAT } from '@/features/rooms/lib/stay'
 import {
@@ -136,7 +136,7 @@ export function ReservationsPage() {
       header: 'Huésped',
       render: (r) => (
         <div className="reservations__guest">
-          <GuestAvatar name={r.guest.name} lastName={r.guest.last_name} />
+          <UserAvatar name={r.guest.name} lastName={r.guest.last_name} />
           <span>
             {r.guest.name} {r.guest.last_name}
           </span>

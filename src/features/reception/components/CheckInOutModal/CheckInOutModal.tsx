@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { App, Button, Checkbox, Modal } from 'antd'
 import { receptionApi } from '@/features/reception/api/reception.api'
 import { getErrorMessage } from '@/shared/api/client'
-import { GuestAvatar } from '@/features/reception/components/GuestAvatar/GuestAvatar'
+import { UserAvatar } from '@/shared/components/UserAvatar/UserAvatar'
 import { formatStayDate } from '@/features/rooms/lib/stay'
 import type { Reservation } from '@/features/client/types'
 import './CheckInOutModal.scss'
@@ -85,7 +85,7 @@ export function CheckInOutModal({
           </header>
 
           <div className="checkinout-modal__guest">
-            <GuestAvatar
+            <UserAvatar
               name={reservation.guest.name}
               lastName={reservation.guest.last_name}
               size={44}

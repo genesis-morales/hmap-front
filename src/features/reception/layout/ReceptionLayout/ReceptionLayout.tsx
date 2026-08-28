@@ -1,16 +1,67 @@
-import { useState } from 'react'
-import { Outlet, useNavigate } from 'react-router-dom'
-import { Drawer } from 'antd'
-import { PanelTopbar } from '@/shared/components/PanelTopbar/PanelTopbar'
-import { ReceptionSidebar } from '@/features/reception/components/ReceptionSidebar/ReceptionSidebar'
-import './ReceptionLayout.scss'
+import { useNavigate } from 'react-router-dom'
+import {
+  CalendarOutlined,
+  HomeOutlined,
+  ProfileOutlined,
+  SearchOutlined,
+  SwapOutlined,
+  SettingOutlined,
+} from '@ant-design/icons'
+import { BedIcon } from '@/shared/components/icons/BedIcon'
+import { PanelLayout } from '@/shared/layouts/PanelLayout/PanelLayout'
+import type { NavItem } from '@/shared/layouts/PanelLayout/PanelSidebar'
+
+const NAV_ITEMS: NavItem[] = [
+  {
+    to: '/panel-reception',
+    label: 'Inicio',
+    icon: <HomeOutlined />,
+    isActive: (p) => p === '/panel-reception',
+  },
+  {
+    to: '/panel-reception/calendario',
+    label: 'Calendario',
+    icon: <CalendarOutlined />,
+    isActive: (p) => p.startsWith('/panel-reception/calendario'),
+  },
+  {
+    to: '/panel-reception/reservas',
+    label: 'Reservas',
+    icon: <ProfileOutlined />,
+    isActive: (p) => p.startsWith('/panel-reception/reservas'),
+  },
+  {
+    to: '/panel-reception/check-in-out',
+    label: 'Check-in/out',
+    icon: <SwapOutlined />,
+    isActive: (p) => p.startsWith('/panel-reception/check-in-out'),
+  },
+  {
+    to: '/panel-reception/habitaciones',
+    label: 'Habitaciones',
+    icon: <BedIcon />,
+    isActive: (p) => p.startsWith('/panel-reception/habitaciones'),
+  },
+  {
+    to: '/panel-reception/buscar',
+    label: 'Buscar reserva',
+    icon: <SearchOutlined />,
+    isActive: (p) => p.startsWith('/panel-reception/buscar'),
+  },
+  {
+    to: '/panel-admin/usuarios',
+    label: 'Administración',
+    icon: <SettingOutlined />,
+    isActive: (p) => p.startsWith('/panel-admin'),
+    visible: (role) => role === 'ADMINISTRADOR',
+  },
+]
 
 /**
- * Layout del Panel de Recepcionista: sidebar fija en escritorio,
- * barra superior con búsqueda global y drawer en móvil (RNF-003).
+ * Layout del Panel de Recepcionista: migrado a `PanelLayout` compartido.
+ * Sidebar fija en escritorio, barra superior con búsqueda global y drawer en móvil.
  */
 export function ReceptionLayout() {
-  const [menuOpen, setMenuOpen] = useState(false)
   const navigate = useNavigate()
 
   const search = (term: string) => {
@@ -22,32 +73,13 @@ export function ReceptionLayout() {
   }
 
   return (
-    <div className="reception-layout">
-      <aside className="reception-layout__sidebar">
-        <ReceptionSidebar />
-      </aside>
-
-      <PanelTopbar
-        title="Panel de Recepción"
-        searchPlaceholder="Buscar huéspedes, reservas..."
-        onSearch={search}
-        onMenuOpen={() => setMenuOpen(true)}
-      />
-
-      <Drawer
-        open={menuOpen}
-        onClose={() => setMenuOpen(false)}
-        placement="left"
-        width={280}
-        styles={{ body: { padding: 0 } }}
-        closable={false}
-      >
-        <ReceptionSidebar onNavigate={() => setMenuOpen(false)} />
-      </Drawer>
-
-      <main className="reception-layout__content">
-        <Outlet />
-      </main>
-    </div>
+    <PanelLayout
+      navItems={NAV_ITEMS}
+      title="Panel de Recepción"
+      brandCaption="Reception Desk"
+      roleLabel="Recepción"
+      searchPlaceholder="Buscar huéspedes, reservas..."
+      onSearch={search}
+    />
   )
 }
