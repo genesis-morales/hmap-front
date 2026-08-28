@@ -15,15 +15,8 @@ export interface TodayReservations {
   check_outs: Reservation[]
 }
 
-/** Envoltorio de paginación de la API (snake_case). */
-export interface PageResponse<T> {
-  content: T[]
-  /** Página actual, 0-based. */
-  page: number
-  size: number
-  total_elements: number
-  total_pages: number
-}
+// La paginación es común a los listados del panel interno.
+export type { PageResponse } from '@/shared/api/types'
 
 /** Filtros de la tabla global de reservas (GET /reservations). */
 export interface ReservationQuery {

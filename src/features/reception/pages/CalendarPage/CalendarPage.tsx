@@ -4,8 +4,8 @@ import { Skeleton } from 'antd'
 import { LeftOutlined, RightOutlined } from '@ant-design/icons'
 import dayjs, { type Dayjs } from 'dayjs'
 import { receptionApi } from '@/features/reception/api/reception.api'
-import { GuestAvatar } from '@/features/reception/components/GuestAvatar/GuestAvatar'
-import { PageHeader } from '@/features/reception/components/PageHeader/PageHeader'
+import { UserAvatar } from '@/shared/components/UserAvatar/UserAvatar'
+import { PageHeader } from '@/shared/components/PageHeader/PageHeader'
 import { StatusTag } from '@/features/client/components/StatusTag/StatusTag'
 import { API_DATE_FORMAT } from '@/features/rooms/lib/stay'
 import {
@@ -150,7 +150,7 @@ export function CalendarPage() {
           <ul className="calendar__day-list">
             {dayReservations.map((r) => (
               <li key={r.id}>
-                <GuestAvatar name={r.guest.name} lastName={r.guest.last_name} />
+                <UserAvatar name={r.guest.name} lastName={r.guest.last_name} />
                 <div className="calendar__day-info">
                   <strong>
                     {r.guest.name} {r.guest.last_name}

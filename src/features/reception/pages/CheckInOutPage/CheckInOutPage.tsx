@@ -4,9 +4,9 @@ import { LoginOutlined, LogoutOutlined } from '@ant-design/icons'
 import { receptionApi } from '@/features/reception/api/reception.api'
 import { getErrorMessage } from '@/shared/api/client'
 import { Table, type Column } from '@/shared/components/Table/Table'
-import { GuestAvatar } from '@/features/reception/components/GuestAvatar/GuestAvatar'
+import { UserAvatar } from '@/shared/components/UserAvatar/UserAvatar'
 import { CheckInOutModal } from '@/features/reception/components/CheckInOutModal/CheckInOutModal'
-import { PageHeader } from '@/features/reception/components/PageHeader/PageHeader'
+import { PageHeader } from '@/shared/components/PageHeader/PageHeader'
 import { StatusTag } from '@/features/client/components/StatusTag/StatusTag'
 import { formatLongDate } from '@/features/reception/lib/date'
 import { formatStayDate } from '@/features/rooms/lib/stay'
@@ -53,7 +53,7 @@ export function CheckInOutPage() {
     header: 'Huésped',
     render: (r) => (
       <div className="checkinout__guest">
-        <GuestAvatar name={r.guest.name} lastName={r.guest.last_name} />
+        <UserAvatar name={r.guest.name} lastName={r.guest.last_name} />
         <span>
           {r.guest.name} {r.guest.last_name}
         </span>

@@ -1,7 +1,7 @@
 @use '@/shared/styles/variables' as *;
 @use '@/shared/styles/mixins' as *;
 
-.guest-avatar {
+.user-avatar {
   @include flex-center;
   border-radius: 50%;
   font-family: $font-label;

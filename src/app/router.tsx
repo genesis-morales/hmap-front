@@ -26,6 +26,8 @@ import { ReservationsPage } from '@/features/reception/pages/ReservationsPage/Re
 import { CheckInOutPage } from '@/features/reception/pages/CheckInOutPage/CheckInOutPage'
 import { RoomsPage } from '@/features/reception/pages/RoomsPage/RoomsPage'
 import { SearchReservationPage } from '@/features/reception/pages/SearchReservationPage/SearchReservationPage'
+import { AdminLayout } from '@/features/admin/layout/AdminLayout/AdminLayout'
+import { UsersPage } from '@/features/admin/pages/UsersPage/UsersPage'
 
 export const router = createBrowserRouter([
   {
@@ -49,6 +51,7 @@ export const router = createBrowserRouter([
           { path: 'recuperar-contrasena', element: <ForgotPasswordPage /> },
           { path: 'recuperar-contrasena/enviado', element: <EmailSentPage /> },
           { path: 'restablecer-contrasena', element: <ResetPasswordPage /> },
+          { path: 'reset-password', element: <ResetPasswordPage /> },
         ],
       },
       // Panel del cliente (E2) — requiere sesión con rol CLIENTE
@@ -85,6 +88,19 @@ export const router = createBrowserRouter([
           { path: 'check-in-out', element: <CheckInOutPage /> },
           { path: 'habitaciones', element: <RoomsPage /> },
           { path: 'buscar', element: <SearchReservationPage /> },
+        ],
+      },
+      // Panel de Administrador (E4) — solo rol ADMINISTRADOR
+      {
+        path: 'panel-admin',
+        element: (
+          <RequireAuth roles={['ADMINISTRADOR']}>
+            <AdminLayout />
+          </RequireAuth>
+        ),
+        children: [
+          { index: true, element: <Navigate to="usuarios" replace /> },
+          { path: 'usuarios', element: <UsersPage /> },
         ],
       },
       { path: '*', element: <Navigate to="/" replace /> },

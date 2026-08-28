@@ -10,9 +10,9 @@ import { useAuth } from '@/features/auth/context/AuthContext'
 import { receptionApi } from '@/features/reception/api/reception.api'
 import { roomsApi } from '@/features/rooms/api/rooms.api'
 import { getErrorMessage } from '@/shared/api/client'
-import { StatCard } from '@/features/reception/components/StatCard/StatCard'
-import { PageHeader } from '@/features/reception/components/PageHeader/PageHeader'
-import { GuestAvatar } from '@/features/reception/components/GuestAvatar/GuestAvatar'
+import { StatCard } from '@/shared/components/StatCard/StatCard'
+import { PageHeader } from '@/shared/components/PageHeader/PageHeader'
+import { UserAvatar } from '@/shared/components/UserAvatar/UserAvatar'
 import { ManualReservationModal } from '@/features/reception/components/ManualReservationModal/ManualReservationModal'
 import { StatusTag } from '@/features/client/components/StatusTag/StatusTag'
 import { formatLongDate } from '@/features/reception/lib/date'
@@ -114,7 +114,7 @@ export function OccupancyPanelPage() {
           <ul className="occupancy-panel__list">
             {checkIns?.map((r) => (
               <li key={r.id} className="occupancy-panel__row">
-                <GuestAvatar name={r.guest.name} lastName={r.guest.last_name} />
+                <UserAvatar name={r.guest.name} lastName={r.guest.last_name} />
                 <div className="occupancy-panel__row-info">
                   <strong>
                     {r.guest.name} {r.guest.last_name}

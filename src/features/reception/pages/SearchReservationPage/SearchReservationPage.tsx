@@ -6,10 +6,10 @@ import type { Dayjs } from 'dayjs'
 import { receptionApi } from '@/features/reception/api/reception.api'
 import { roomsApi } from '@/features/rooms/api/rooms.api'
 import { Table, type Column } from '@/shared/components/Table/Table'
-import { GuestAvatar } from '@/features/reception/components/GuestAvatar/GuestAvatar'
+import { UserAvatar } from '@/shared/components/UserAvatar/UserAvatar'
 import { CancelReservationModal } from '@/features/reception/components/CancelReservationModal/CancelReservationModal'
 import { EditReservationModal } from '@/features/reception/components/EditReservationModal/EditReservationModal'
-import { PageHeader } from '@/features/reception/components/PageHeader/PageHeader'
+import { PageHeader } from '@/shared/components/PageHeader/PageHeader'
 import { StatusTag } from '@/features/client/components/StatusTag/StatusTag'
 import { formatStayDate, API_DATE_FORMAT } from '@/features/rooms/lib/stay'
 import {
@@ -107,7 +107,7 @@ export function SearchReservationPage() {
       header: 'Huésped',
       render: (r) => (
         <div className="search-reservation__guest">
-          <GuestAvatar name={r.guest.name} lastName={r.guest.last_name} />
+          <UserAvatar name={r.guest.name} lastName={r.guest.last_name} />
           <span>{highlight(`${r.guest.name} ${r.guest.last_name}`, applied)}</span>
         </div>
       ),
