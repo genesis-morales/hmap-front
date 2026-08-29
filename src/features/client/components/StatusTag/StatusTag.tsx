@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import './StatusTag.scss'
 
-type StatusTone = 'success' | 'warning' | 'danger' | 'neutral'
+type StatusTone = 'success' | 'warning' | 'danger' | 'neutral' | 'info'
 
 interface StatusTagProps {
   tone: StatusTone

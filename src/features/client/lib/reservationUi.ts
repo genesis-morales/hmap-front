@@ -24,10 +24,10 @@ export const UI_STATUS_LABEL: Record<ReservationUiStatus, string> = {
 export const STATUS_LABEL: Record<ReservationStatus, string> = {
   PENDIENTE: 'Pendiente',
   CONFIRMADA: 'Confirmada',
+  CHECK_IN: 'En estancia',
+  CHECK_OUT: 'Completada',
   CANCELADA: 'Cancelada',
 }
 
-/** Iniciales para el avatar: 'Alejandro' + 'Morales' → 'AM'. */
-export function getInitials(name: string, lastName: string): string {
-  return `${name.charAt(0)}${lastName.charAt(0)}`.toUpperCase()
-}
+// Las iniciales del avatar las comparte el panel interno.
+export { getInitials } from '@/shared/lib/initials'

@@ -1,0 +1,66 @@
+@use '@/shared/styles/variables' as *;
+@use '@/shared/styles/mixins' as *;
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+
+  &__breadcrumb {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    font-family: $font-label;
+    font-size: 0.85rem;
+    margin-bottom: 6px;
+  }
+
+  &__crumb {
+    display: inline-flex;
+    align-items: center;
+
+    a {
+      color: $color-terracotta;
+
+      &:hover {
+        color: $color-accent;
+      }
+    }
+  }
+
+  &__crumb--current {
+    color: $color-muted;
+  }
+
+  &__sep {
+    color: $color-muted;
+    margin-inline: 8px;
+  }
+
+  &__title {
+    font-family: $font-heading;
+    font-weight: 700;
+    font-size: 2rem;
+    color: $color-heading;
+    line-height: 1.1;
+  }
+
+  &__subtitle {
+    color: $color-muted;
+    font-family: $font-label;
+    margin-top: 6px;
+
+    span {
+      margin-inline: 6px;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+}

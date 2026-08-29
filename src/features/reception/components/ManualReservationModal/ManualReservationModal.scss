@@ -1,0 +1,11 @@
+@use '@/shared/styles/variables' as *;
+@use '@/shared/styles/mixins' as *;
+
+.manual-reservation__grid {
+  display: grid;
+  gap: 0 16px;
+
+  @include up($bp-sm) {
+    grid-template-columns: 1fr 1fr;
+  }
+}

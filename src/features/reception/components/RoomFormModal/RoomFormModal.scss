@@ -1,0 +1,16 @@
+@use '@/shared/styles/variables' as *;
+@use '@/shared/styles/mixins' as *;
+
+.room-form__grid {
+  display: grid;
+  gap: 0 16px;
+  grid-template-columns: 1fr 1fr 1fr;
+
+  &--2 {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @include down($bp-sm) {
+    grid-template-columns: 1fr;
+  }
+}

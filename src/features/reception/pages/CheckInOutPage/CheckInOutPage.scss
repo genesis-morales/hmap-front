@@ -1,0 +1,91 @@
+@use '@/shared/styles/variables' as *;
+@use '@/shared/styles/mixins' as *;
+
+.checkinout {
+  &__summary {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  &__summary-pill {
+    @include label-caps;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: $radius-sm;
+    color: #fff;
+
+    &--in {
+      background: $color-accent;
+    }
+
+    &--out {
+      background: $color-forest;
+    }
+  }
+
+  &__tabs {
+    display: flex;
+    gap: 24px;
+    border-bottom: 1px solid $color-border;
+    margin-bottom: 20px;
+
+    button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 12px 2px;
+      font-family: $font-label;
+      font-weight: 600;
+      color: $color-muted;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: $color-terracotta;
+      }
+    }
+
+    &__tab--active,
+    .checkinout__tab--active {
+      color: $color-terracotta;
+      border-bottom-color: $color-terracotta;
+    }
+  }
+
+  &__guest {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: $font-label;
+    font-weight: 600;
+    color: $color-heading;
+  }
+
+  &__room {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.35;
+
+    strong {
+      font-family: $font-label;
+      font-weight: 600;
+      color: $color-heading;
+    }
+
+    span {
+      font-size: 0.83rem;
+      color: $color-muted;
+    }
+  }
+
+  &__divider {
+    @include label-caps;
+    color: $color-muted;
+    text-align: center;
+    margin: 24px 0 12px;
+  }
+}

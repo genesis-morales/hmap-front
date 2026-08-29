@@ -13,6 +13,11 @@ import type { Room as ApiRoom } from '@/features/rooms/types'
 function toViewRoom(api: ApiRoom): Room {
   const local = getRoomBySlug(api.slug)
   const cdnImages = api.images.filter((url) => /^https?:\/\//.test(url))
+  // Priorizar imágenes locales (ya tienen el orden correcto con la portada
+  // definida por `priority` en rooms.ts); CDN como respaldo.
+  const chosen = local?.images && local.images.length > 0
+    ? local.images
+    : cdnImages
 
   return {
     slug: api.slug,
@@ -25,7 +30,7 @@ function toViewRoom(api: ApiRoom): Room {
     rating: local?.rating ?? 5,
     tagline: local?.tagline ?? api.description,
     pricePerNight: api.price_per_night,
-    images: cdnImages.length > 0 ? cdnImages : local?.images ?? [],
+    images: chosen,
     fallbackImages: local?.images ?? [],
     description: api.description,
     bathroom: api.bathroom,

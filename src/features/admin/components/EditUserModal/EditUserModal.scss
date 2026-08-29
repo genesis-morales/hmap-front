@@ -1,0 +1,17 @@
+@use '@/shared/styles/variables' as *;
+
+.edit-user-form {
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  &__hint {
+    margin-top: -12px;
+    margin-bottom: 16px;
+    font-size: 0.85rem;
+    color: $color-muted;
+    font-family: $font-label;
+  }
+}

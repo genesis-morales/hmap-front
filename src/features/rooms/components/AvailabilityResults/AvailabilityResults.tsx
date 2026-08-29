@@ -68,7 +68,20 @@ export function AvailabilityResults({ search, changeDatesTo }: AvailabilityResul
                   ? 'CAPACITY'
                   : 'BOOKED',
           }))
-        setResults({ available, unavailable })
+
+        // Recomendación por mejor ajuste: la de menor diferencia entre
+        // capacidad y huéspedes solicitados (evita sobredimensionar); a
+        // igualdad de ajuste, la más barata.
+        const recommended = [...available].sort(
+          (a, b) =>
+            (a.capacity - search.guests) - (b.capacity - search.guests) ||
+            a.price_per_night - b.price_per_night,
+        )[0]
+        const ordered = recommended
+          ? [recommended, ...available.filter((r) => r.id !== recommended.id)]
+          : available
+
+        setResults({ available: ordered, unavailable })
       })
       .catch((err) =>
         setError(getErrorMessage(err, 'No se pudo consultar la disponibilidad.')),
@@ -123,8 +136,8 @@ export function AvailabilityResults({ search, changeDatesTo }: AvailabilityResul
               <span className="availability__badge">Recomendado</span>
             )}
             <RoomPhoto
-              src={room.images[0]}
-              fallbackSrc={localRoomImage(room.slug)}
+              src={localRoomImage(room.slug) ?? room.images[0]}
+              fallbackSrc={room.images[0]}
               alt={room.name}
             />
           </div>
@@ -175,8 +188,8 @@ export function AvailabilityResults({ search, changeDatesTo }: AvailabilityResul
               {UNAVAILABLE_BADGE[reason]}
             </span>
             <RoomPhoto
-              src={room.images[0]}
-              fallbackSrc={localRoomImage(room.slug)}
+              src={localRoomImage(room.slug) ?? room.images[0]}
+              fallbackSrc={room.images[0]}
               alt={room.name}
             />
           </div>

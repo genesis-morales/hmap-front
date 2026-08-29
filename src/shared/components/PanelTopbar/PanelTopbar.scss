@@ -1,0 +1,62 @@
+@use '@/shared/styles/variables' as *;
+@use '@/shared/styles/mixins' as *;
+
+.panel-topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: $color-surface;
+  border-bottom: 1px solid $color-border;
+  position: sticky;
+  top: 0;
+  z-index: 9;
+
+  @include up($bp-lg) {
+    padding: 14px 48px;
+  }
+
+  &__burger {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.3rem;
+    color: $color-heading;
+    padding: 6px;
+
+    @include up($bp-lg) {
+      display: none;
+    }
+  }
+
+  &__brand-mobile {
+    @include up($bp-lg) {
+      display: none;
+    }
+  }
+
+  &__title {
+    display: none;
+    font-family: $font-heading;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: $color-heading;
+    margin: 0;
+    white-space: nowrap;
+
+    @include up($bp-lg) {
+      display: block;
+    }
+  }
+
+  &__search {
+    width: 360px;
+    max-width: 100%;
+    border-radius: 999px;
+    background: $color-input-fill;
+
+    .ant-input {
+      background: transparent;
+    }
+  }
+}

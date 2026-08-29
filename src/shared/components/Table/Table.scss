@@ -1,0 +1,58 @@
+@use '@/shared/styles/variables' as *;
+@use '@/shared/styles/mixins' as *;
+
+.data-table {
+  background: $color-surface;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-sm;
+  overflow: hidden;
+  width: 100%;
+  overflow-x: auto;
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead th {
+    @include label-caps;
+    color: $color-muted;
+    text-align: left;
+    padding: 16px 20px;
+    background: #faf7f1;
+    border-bottom: 1px solid $color-border;
+    white-space: nowrap;
+  }
+
+  tbody td {
+    padding: 16px 20px;
+    border-bottom: 1px solid $color-border;
+    color: $color-text;
+    font-size: 0.95rem;
+    vertical-align: middle;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  &__row--clickable {
+    cursor: pointer;
+    transition: background 0.15s ease;
+
+    &:hover {
+      background: $color-bg;
+    }
+  }
+
+  &__empty-row td {
+    text-align: center;
+    color: $color-muted;
+    padding: 40px 20px;
+    font-family: $font-label;
+  }
+
+  &__skeleton-row td {
+    padding: 18px 20px;
+  }
+}

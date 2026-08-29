@@ -1,0 +1,92 @@
+@use '@/shared/styles/variables' as *;
+@use '@/shared/styles/mixins' as *;
+
+.stat-card {
+  background: $color-surface;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-sm;
+  padding: 20px 22px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  &__label {
+    @include label-caps;
+    color: $color-muted;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  &__value {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: $font-heading;
+    font-weight: 700;
+    font-size: 1.9rem;
+    color: $color-heading;
+    line-height: 1;
+  }
+
+  &__icon {
+    font-size: 1rem;
+  }
+
+  &__body {
+    flex: 1;
+  }
+
+  // Recuadro de ícono (tarjetas de conteo inferiores)
+  &__icon-box {
+    @include flex-center;
+    width: 48px;
+    height: 48px;
+    border-radius: $radius-md;
+    font-size: 1.2rem;
+    background: #efece4;
+    color: $color-muted;
+  }
+
+  // Variante con borde lateral de color
+  &--accent {
+    border-left: 4px solid transparent;
+  }
+
+  &--accent#{&}--success {
+    border-left-color: $color-success;
+    .stat-card__value,
+    .stat-card__icon {
+      color: $color-success;
+    }
+  }
+
+  &--accent#{&}--danger {
+    border-left-color: $color-error;
+    .stat-card__value,
+    .stat-card__icon {
+      color: $color-error;
+    }
+  }
+
+  &--accent#{&}--warning {
+    border-left-color: $color-accent;
+    .stat-card__value,
+    .stat-card__icon {
+      color: $color-accent;
+    }
+  }
+
+  // Variante 'boxed': color solo en el recuadro del ícono
+  &--boxed#{&}--success .stat-card__icon-box {
+    background: #d8efe1;
+    color: $color-success;
+  }
+  &--boxed#{&}--warning .stat-card__icon-box {
+    background: #f7ecd6;
+    color: $color-accent;
+  }
+  &--boxed#{&}--danger .stat-card__icon-box {
+    background: #fbe1dc;
+    color: $color-error;
+  }
+}
