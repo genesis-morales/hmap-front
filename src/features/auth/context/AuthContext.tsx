@@ -15,8 +15,8 @@ interface AuthContextValue {
   user: User | null
   isAuthenticated: boolean
   loading: boolean
-  login: (payload: LoginRequest) => Promise<void>
-  register: (payload: RegisterRequest) => Promise<void>
+  login: (payload: LoginRequest) => Promise<User>
+  register: (payload: RegisterRequest) => Promise<User>
   logout: () => void
   /** Sincroniza el usuario en memoria tras editar el perfil (HU-014). */
   updateUser: (user: User) => void
@@ -46,13 +46,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // y completa la sesión con GET /auth/me si el user no vino en la respuesta.
   const startSession = useCallback(async (token: string, user?: User) => {
     localStorage.setItem(TOKEN_STORAGE_KEY, token)
-    setUser(user ?? (await authApi.me()))
+    const resolved = user ?? (await authApi.me())
+    setUser(resolved)
+    return resolved
   }, [])
 
   const login = useCallback(
     async (payload: LoginRequest) => {
       const { token, user } = await authApi.login(payload)
-      await startSession(token, user)
+      return startSession(token, user)
     },
     [startSession],
   )
@@ -60,7 +62,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const register = useCallback(
     async (payload: RegisterRequest) => {
       const { token, user } = await authApi.register(payload)
-      await startSession(token, user)
+      return startSession(token, user)
     },
     [startSession],
   )

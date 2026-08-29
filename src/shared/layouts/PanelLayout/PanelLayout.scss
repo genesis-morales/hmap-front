@@ -1,0 +1,39 @@
+@use '@/shared/styles/variables' as *;
+@use '@/shared/styles/mixins' as *;
+
+$sidebar-width: 264px;
+
+.panel-layout {
+  min-height: 100vh;
+  background: $color-bg;
+
+  &__sidebar {
+    position: fixed;
+    inset-block: 0;
+    left: 0;
+    width: $sidebar-width;
+    border-right: 1px solid $color-border;
+    background: $color-surface;
+    z-index: 10;
+    display: none;
+
+    @include up($bp-lg) {
+      display: block;
+    }
+  }
+
+  .panel-topbar {
+    @include up($bp-lg) {
+      margin-left: $sidebar-width;
+    }
+  }
+
+  &__content {
+    padding: 28px 20px 64px;
+
+    @include up($bp-lg) {
+      margin-left: $sidebar-width;
+      padding: 32px 48px 72px;
+    }
+  }
+}

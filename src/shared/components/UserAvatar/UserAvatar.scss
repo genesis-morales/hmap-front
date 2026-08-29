@@ -1,0 +1,10 @@
+@use '@/shared/styles/variables' as *;
+@use '@/shared/styles/mixins' as *;
+
+.user-avatar {
+  @include flex-center;
+  border-radius: 50%;
+  font-family: $font-label;
+  font-weight: 700;
+  flex-shrink: 0;
+}

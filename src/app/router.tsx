@@ -19,6 +19,15 @@ import { ReservationDetailPage } from '@/features/client/pages/ReservationDetail
 import { EditReservationPage } from '@/features/client/pages/EditReservationPage/EditReservationPage'
 import { ProfilePage } from '@/features/client/pages/ProfilePage/ProfilePage'
 import { ChangePasswordPage } from '@/features/client/pages/ChangePasswordPage/ChangePasswordPage'
+import { ReceptionLayout } from '@/features/reception/layout/ReceptionLayout/ReceptionLayout'
+import { OccupancyPanelPage } from '@/features/reception/pages/OccupancyPanelPage/OccupancyPanelPage'
+import { CalendarPage } from '@/features/reception/pages/CalendarPage/CalendarPage'
+import { ReservationsPage } from '@/features/reception/pages/ReservationsPage/ReservationsPage'
+import { CheckInOutPage } from '@/features/reception/pages/CheckInOutPage/CheckInOutPage'
+import { RoomsPage } from '@/features/reception/pages/RoomsPage/RoomsPage'
+import { SearchReservationPage } from '@/features/reception/pages/SearchReservationPage/SearchReservationPage'
+import { AdminLayout } from '@/features/admin/layout/AdminLayout/AdminLayout'
+import { UsersPage } from '@/features/admin/pages/UsersPage/UsersPage'
 
 export const router = createBrowserRouter([
   {
@@ -42,6 +51,7 @@ export const router = createBrowserRouter([
           { path: 'recuperar-contrasena', element: <ForgotPasswordPage /> },
           { path: 'recuperar-contrasena/enviado', element: <EmailSentPage /> },
           { path: 'restablecer-contrasena', element: <ResetPasswordPage /> },
+          { path: 'reset-password', element: <ResetPasswordPage /> },
         ],
       },
       // Panel del cliente (E2) — requiere sesión con rol CLIENTE
@@ -61,6 +71,36 @@ export const router = createBrowserRouter([
           { path: 'reservas/:id/editar', element: <EditReservationPage /> },
           { path: 'perfil', element: <ProfilePage /> },
           { path: 'perfil/contrasena', element: <ChangePasswordPage /> },
+        ],
+      },
+      // Panel de Recepcionista (E3) — rol RECEPCIONISTA o ADMINISTRADOR
+      {
+        path: 'panel-reception',
+        element: (
+          <RequireAuth roles={['RECEPCIONISTA', 'ADMINISTRADOR']}>
+            <ReceptionLayout />
+          </RequireAuth>
+        ),
+        children: [
+          { index: true, element: <OccupancyPanelPage /> },
+          { path: 'calendario', element: <CalendarPage /> },
+          { path: 'reservas', element: <ReservationsPage /> },
+          { path: 'check-in-out', element: <CheckInOutPage /> },
+          { path: 'habitaciones', element: <RoomsPage /> },
+          { path: 'buscar', element: <SearchReservationPage /> },
+        ],
+      },
+      // Panel de Administrador (E4) — solo rol ADMINISTRADOR
+      {
+        path: 'panel-admin',
+        element: (
+          <RequireAuth roles={['ADMINISTRADOR']}>
+            <AdminLayout />
+          </RequireAuth>
+        ),
+        children: [
+          { index: true, element: <Navigate to="usuarios" replace /> },
+          { path: 'usuarios', element: <UsersPage /> },
         ],
       },
       { path: '*', element: <Navigate to="/" replace /> },

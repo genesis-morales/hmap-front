@@ -11,6 +11,7 @@ node_modules
 dist
 dist-ssr
 *.local
+*.tsbuildinfo
 
 # Editor directories and files
 .vscode/*
@@ -24,3 +25,10 @@ dist-ssr
 *.sw?
 
 .env
+
+
+# Playwright
+e2e/.auth/
+playwright-report/
+blob-report/
+test-results/
