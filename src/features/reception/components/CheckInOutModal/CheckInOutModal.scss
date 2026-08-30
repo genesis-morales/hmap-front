@@ -2,44 +2,13 @@
 @use '@/shared/styles/mixins' as *;
 
 .checkinout-modal {
-  &__head {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
-
-    h3 {
-      font-family: $font-heading;
-      font-weight: 700;
-      font-size: 1.3rem;
-      color: $color-heading;
-      width: 100%;
-    }
-  }
-
-  &__badge {
-    @include label-caps;
-    background: #fbe4de;
-    color: $color-terracotta;
-    padding: 4px 10px;
-    border-radius: 6px;
-  }
-
-  &__code {
-    color: $color-muted;
-    font-family: $font-label;
-    font-size: 0.9rem;
-  }
-
   &__guest {
     display: flex;
     align-items: center;
     gap: 12px;
-    background: $color-bg;
+    background: $color-bg-alt;
     border-radius: $radius-md;
     padding: 14px 16px;
-    margin-bottom: 16px;
 
     strong {
       display: block;
@@ -53,51 +22,31 @@
     }
   }
 
-  &__details {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 20px;
+  &__reminders {
+    padding: 14px 16px;
+    background: $color-bg-alt;
+    border-left: 3px solid $color-forest;
+    border-radius: $radius-sm;
 
-    dt {
-      @include label-caps;
-      color: $color-muted;
-      margin-bottom: 4px;
+    ul {
+      margin: 0;
+      padding-left: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
     }
 
-    dd {
+    li {
       font-family: $font-label;
-      color: $color-heading;
+      font-size: 0.9rem;
+      color: $color-text;
     }
   }
 
-  &__verify {
-    border-top: 1px solid $color-border;
-    padding-top: 16px;
-    margin-bottom: 20px;
-  }
-
-  &__verify-title {
+  &__reminders-title {
     @include label-caps;
     color: $color-muted;
     display: block;
-    margin-bottom: 12px;
-  }
-
-  &__footer {
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-  }
-}
-
-// Botón verde bosque (acción destacada del panel interno)
-.btn-forest.ant-btn-primary {
-  background: $color-forest;
-  border-color: $color-forest;
-
-  &:not(:disabled):hover {
-    background: $color-forest-deep;
-    border-color: $color-forest-deep;
+    margin-bottom: 10px;
   }
 }

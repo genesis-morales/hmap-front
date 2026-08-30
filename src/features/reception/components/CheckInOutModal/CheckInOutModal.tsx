@@ -1,7 +1,13 @@
-import { useEffect, useState } from 'react'
-import { App, Button, Checkbox, Modal } from 'antd'
+import { type ReactNode } from 'react'
+import { App } from 'antd'
+import { LoginOutlined, LogoutOutlined } from '@ant-design/icons'
 import { receptionApi } from '@/features/reception/api/reception.api'
-import { getErrorMessage } from '@/shared/api/client'
+import {
+  ConfirmModal,
+  ModalSummary,
+  ModalSummaryRow,
+  ModalSummaryCode,
+} from '@/shared/components/Modal'
 import { UserAvatar } from '@/shared/components/UserAvatar/UserAvatar'
 import { formatStayDate } from '@/features/rooms/lib/stay'
 import type { Reservation } from '@/features/client/types'
@@ -18,22 +24,35 @@ interface CheckInOutModalProps {
   onDone: () => void
 }
 
-const COPY: Record<Mode, { title: string; badge: string; check: string; cta: string }> = {
+const COPY: Record<
+  Mode,
+  { title: string; reminders: string[]; cta: string; success: string; icon: ReactNode }
+> = {
   'check-in': {
     title: 'Registrar Check-in',
-    badge: 'CHECK-IN',
-    check: 'Documento de identidad verificado',
+    reminders: [
+      'El cliente debe presentar su documento de identidad.',
+      'Entregar las llaves de la habitación.',
+      'Informar el horario del desayuno y la hora de salida.',
+    ],
     cta: 'Confirmar check-in',
+    success: 'Check-in registrado. La habitación quedó ocupada.',
+    icon: <LoginOutlined />,
   },
   'check-out': {
     title: 'Registrar Check-out',
-    badge: 'CHECK-OUT',
-    check: 'Llaves entregadas a recepción',
+    reminders: [
+      'El cliente debe entregar las llaves en recepción.',
+      'Revisar la habitación antes de liberarla.',
+      'Confirmar que no queden consumos pendientes.',
+    ],
     cta: 'Confirmar check-out',
+    success: 'Check-out registrado. La habitación quedó disponible.',
+    icon: <LogoutOutlined />,
   },
 }
 
-/** HU-019 — Registro físico de entrada/salida del huésped. */
+/** HU-019 — Registro físico de entrada/salida del cliente. */
 export function CheckInOutModal({
   reservation,
   mode,
@@ -42,104 +61,75 @@ export function CheckInOutModal({
   onDone,
 }: CheckInOutModalProps) {
   const { message } = App.useApp()
-  const [checked, setChecked] = useState(false)
-  const [saving, setSaving] = useState(false)
   const copy = COPY[mode]
-
-  useEffect(() => {
-    if (open) setChecked(false)
-  }, [open])
 
   const confirm = async () => {
     if (!reservation) return
-    setSaving(true)
-    try {
-      if (mode === 'check-in') {
-        // El check-in exige estado CONFIRMADA; si sigue PENDIENTE, se confirma antes.
-        if (reservation.status === 'PENDIENTE') {
-          await receptionApi.confirm(reservation.id)
-        }
-        await receptionApi.checkIn(reservation.id)
-        message.success('Check-in registrado. La habitación quedó ocupada.')
-      } else {
-        await receptionApi.checkOut(reservation.id)
-        message.success('Check-out registrado. La habitación quedó disponible.')
+    if (mode === 'check-in') {
+      // El check-in exige estado CONFIRMADA; si sigue PENDIENTE, se confirma antes.
+      if (reservation.status === 'PENDIENTE') {
+        await receptionApi.confirm(reservation.id)
       }
-      onDone()
-      onClose()
-    } catch (error) {
-      message.error(getErrorMessage(error, 'No se pudo completar la operación.'))
-    } finally {
-      setSaving(false)
+      await receptionApi.checkIn(reservation.id)
+    } else {
+      await receptionApi.checkOut(reservation.id)
     }
+    message.success(copy.success)
+    onDone()
   }
 
+  if (!reservation) return null
+
   return (
-    <Modal open={open} onCancel={onClose} footer={null} width={520} destroyOnHidden>
-      {reservation && (
-        <div className="checkinout-modal">
-          <header className="checkinout-modal__head">
-            <h3>{copy.title}</h3>
-            <span className="checkinout-modal__badge">{copy.badge}</span>
-            <span className="checkinout-modal__code">Reserva # {reservation.code}</span>
-          </header>
-
-          <div className="checkinout-modal__guest">
-            <UserAvatar
-              name={reservation.guest.name}
-              lastName={reservation.guest.last_name}
-              size={44}
-            />
-            <div>
-              <strong>
-                {reservation.guest.name} {reservation.guest.last_name}
-              </strong>
-              <span>{reservation.guest.email}</span>
-            </div>
-          </div>
-
-          <dl className="checkinout-modal__details">
-            <div>
-              <dt>Habitación</dt>
-              <dd>{reservation.room.name}</dd>
-            </div>
-            <div>
-              <dt>Check-in</dt>
-              <dd>{formatStayDate(reservation.check_in)}</dd>
-            </div>
-            <div>
-              <dt>Check-out</dt>
-              <dd>{formatStayDate(reservation.check_out)}</dd>
-            </div>
-            <div>
-              <dt>Personas</dt>
-              <dd>{reservation.guests}</dd>
-            </div>
-          </dl>
-
-          <div className="checkinout-modal__verify">
-            <span className="checkinout-modal__verify-title">Verificación</span>
-            <Checkbox checked={checked} onChange={(e) => setChecked(e.target.checked)}>
-              {copy.check}
-            </Checkbox>
-          </div>
-
-          <footer className="checkinout-modal__footer">
-            <Button type="text" onClick={onClose}>
-              Cancelar
-            </Button>
-            <Button
-              type="primary"
-              className="btn-forest"
-              disabled={!checked}
-              loading={saving}
-              onClick={confirm}
-            >
-              {copy.cta}
-            </Button>
-          </footer>
+    <ConfirmModal
+      open={open}
+      onClose={onClose}
+      tone={mode === 'check-in' ? 'success' : 'info'}
+      icon={copy.icon}
+      title={copy.title}
+      confirmText={copy.cta}
+      width={520}
+      errorMessage="No se pudo completar la operación."
+      onConfirm={confirm}
+    >
+      <div className="checkinout-modal__guest">
+        <UserAvatar
+          name={reservation.guest.name}
+          lastName={reservation.guest.last_name}
+          size={44}
+        />
+        <div>
+          <strong>
+            {reservation.guest.name} {reservation.guest.last_name}
+          </strong>
+          <span>{reservation.guest.email}</span>
         </div>
-      )}
-    </Modal>
+      </div>
+
+      <ModalSummary>
+        <ModalSummaryRow label="Habitación">
+          {reservation.room.name}
+        </ModalSummaryRow>
+        <ModalSummaryRow label="Check-in">
+          {formatStayDate(reservation.check_in)}
+        </ModalSummaryRow>
+        <ModalSummaryRow label="Check-out">
+          {formatStayDate(reservation.check_out)}
+        </ModalSummaryRow>
+        <ModalSummaryRow label="Personas">{reservation.guests}</ModalSummaryRow>
+        <ModalSummaryCode code={reservation.code} />
+      </ModalSummary>
+
+      <div className="checkinout-modal__reminders">
+        <span className="checkinout-modal__reminders-title">
+          Breve recordatorio
+        </span>
+        <ul>
+          {copy.reminders.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+      </div>
+    </ConfirmModal>
   )
 }

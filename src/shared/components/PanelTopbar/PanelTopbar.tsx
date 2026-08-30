@@ -4,8 +4,6 @@ import { Brand } from '@/shared/components/Brand/Brand'
 import './PanelTopbar.scss'
 
 interface PanelTopbarProps {
-  /** Título del panel (p. ej. "Panel de Recepción", "Panel Administrativo"). */
-  title: string
   /** Placeholder del campo de búsqueda. */
   searchPlaceholder?: string
   /** Callback al presionar Enter en el buscador. */
@@ -16,16 +14,17 @@ interface PanelTopbarProps {
 
 /**
  * Barra superior reutilizable para paneles internos (recepción, admin).
- * Incluye: hamburguesa (móvil), brand (móvil), título (escritorio) y buscador.
+ * Incluye: hamburguesa (móvil), brand (móvil) y buscador global.
  */
 export function PanelTopbar({
-  title,
   searchPlaceholder = 'Buscar...',
   onSearch,
   onMenuOpen,
 }: PanelTopbarProps) {
   return (
-    <header className="panel-topbar">
+    <header
+      className={`panel-topbar${onSearch ? '' : ' panel-topbar--mobile-only'}`}
+    >
       <button
         className="panel-topbar__burger"
         aria-label="Abrir menú"
@@ -37,8 +36,6 @@ export function PanelTopbar({
       <div className="panel-topbar__brand-mobile">
         <Brand size={32} />
       </div>
-
-      <h1 className="panel-topbar__title">{title}</h1>
 
       {onSearch && (
         <Input

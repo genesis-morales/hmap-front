@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
-import { App, Input, Modal } from 'antd'
+import { useState } from 'react'
+import { App, Input } from 'antd'
+import { ExclamationOutlined } from '@ant-design/icons'
 import { receptionApi } from '@/features/reception/api/reception.api'
-import { getErrorMessage } from '@/shared/api/client'
+import { ConfirmModal, ModalSummary, ModalSummaryRow } from '@/shared/components/Modal'
 import type { Reservation } from '@/features/client/types'
 
 interface CancelReservationModalProps {
@@ -20,50 +21,46 @@ export function CancelReservationModal({
 }: CancelReservationModalProps) {
   const { message } = App.useApp()
   const [reason, setReason] = useState('')
-  const [saving, setSaving] = useState(false)
 
-  useEffect(() => {
-    if (open) setReason('')
-  }, [open])
+  // El motivo se limpia al cerrar; destroyOnHidden desmonta el contenido.
+  const close = () => {
+    setReason('')
+    onClose()
+  }
+
+  if (!reservation) return null
 
   const submit = async () => {
-    if (!reservation) return
-    if (!reason.trim()) {
-      message.warning('Indica el motivo de la cancelación.')
-      return
-    }
-    setSaving(true)
-    try {
-      await receptionApi.cancel(reservation.id, reason.trim())
-      message.success('Reserva cancelada. Se notificó al huésped.')
-      onCancelled()
-      onClose()
-    } catch (error) {
-      message.error(getErrorMessage(error, 'No se pudo cancelar la reserva.'))
-    } finally {
-      setSaving(false)
-    }
+    await receptionApi.cancel(reservation.id, reason.trim())
+    message.success('Reserva cancelada. Se notificó al cliente.')
+    onCancelled()
+    setReason('')
   }
 
   return (
-    <Modal
+    <ConfirmModal
       open={open}
-      onCancel={onClose}
-      onOk={submit}
-      okText="Cancelar reserva"
+      onClose={close}
+      tone="danger"
+      icon={<ExclamationOutlined />}
+      title="¿Cancelar esta reserva?"
+      description="Esta acción anula la reserva y el motivo queda registrado."
+      confirmText="Cancelar reserva"
       cancelText="Volver"
-      okButtonProps={{ danger: true }}
-      confirmLoading={saving}
-      title={`Cancelar reserva ${reservation?.code ?? ''}`}
-      destroyOnHidden
+      confirmDisabled={!reason.trim()}
+      errorMessage="No se pudo cancelar la reserva."
+      onConfirm={submit}
     >
-      <p style={{ marginBottom: 12, color: '#8a8578' }}>
-        Esta acción anula la reserva de{' '}
-        <strong>
-          {reservation?.guest.name} {reservation?.guest.last_name}
-        </strong>
-        . El motivo queda registrado.
-      </p>
+      <ModalSummary>
+        <ModalSummaryRow label="Cliente">
+          {reservation.guest.name} {reservation.guest.last_name}
+        </ModalSummaryRow>
+        <ModalSummaryRow label="Habitación">
+          {reservation.room.name}
+        </ModalSummaryRow>
+        <ModalSummaryRow label="Reserva"># {reservation.code}</ModalSummaryRow>
+      </ModalSummary>
+
       <Input.TextArea
         rows={3}
         value={reason}
@@ -72,6 +69,6 @@ export function CancelReservationModal({
         maxLength={200}
         showCount
       />
-    </Modal>
+    </ConfirmModal>
   )
 }

@@ -75,10 +75,9 @@ export function ReceptionLayout() {
   return (
     <PanelLayout
       navItems={NAV_ITEMS}
-      title="Panel de Recepción"
       brandCaption="Reception Desk"
       roleLabel="Recepción"
-      searchPlaceholder="Buscar huéspedes, reservas..."
+      searchPlaceholder="Buscar clientes, reservas..."
       onSearch={search}
     />
   )

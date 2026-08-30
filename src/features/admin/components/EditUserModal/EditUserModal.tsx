@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
-import { App, Form, Input, Modal, Select } from 'antd'
+import { App, Form, Input, Select } from 'antd'
 import { adminUsersApi } from '@/features/admin/api/adminUsers.api'
-import { getErrorMessage, getFieldErrors } from '@/shared/api/client'
+import { applyApiError } from '@/shared/api/client'
+import { FormModal } from '@/shared/components/Modal'
 import type { AdminUser, AssignableRole, UpdateUserRequest } from '@/features/admin/types'
 import './EditUserModal.scss'
 
@@ -71,33 +72,21 @@ export function EditUserModal({ user, open, onClose, onSaved }: EditUserModalPro
       onSaved()
       onClose()
     } catch (error) {
-      const fieldErrors = getFieldErrors(error)
-      if (Object.keys(fieldErrors).length > 0) {
-        form.setFields(
-          Object.entries(fieldErrors).map(([name, msg]) => ({
-            name: name as keyof FormValues,
-            errors: [msg],
-          })),
-        )
-      } else {
-        message.error(getErrorMessage(error, 'No se pudo actualizar el usuario.'))
-      }
+      applyApiError(error, form, 'No se pudo actualizar el usuario.')
     } finally {
       setSaving(false)
     }
   }
 
   return (
-    <Modal
+    <FormModal
       open={open}
-      onCancel={onClose}
-      onOk={() => form.submit()}
-      okText="Guardar cambios"
-      cancelText="Cancelar"
-      confirmLoading={saving}
+      onClose={onClose}
+      onSubmit={() => form.submit()}
+      submitText="Guardar cambios"
+      saving={saving}
       title="Editar usuario"
       width={560}
-      destroyOnClose
     >
       <Form
         form={form}
@@ -149,6 +138,6 @@ export function EditUserModal({ user, open, onClose, onSaved }: EditUserModalPro
           </Form.Item>
         </div>
       </Form>
-    </Modal>
+    </FormModal>
   )
 }

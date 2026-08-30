@@ -1,0 +1,19 @@
+@use '@/shared/styles/variables' as *;
+@use '@/shared/styles/mixins' as *;
+
+.room-status-modal {
+  &__field {
+    display: block;
+
+    > span {
+      @include label-caps;
+      display: block;
+      margin-bottom: 8px;
+      color: $color-muted;
+    }
+
+    .ant-select {
+      width: 100%;
+    }
+  }
+}

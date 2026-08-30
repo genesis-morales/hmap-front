@@ -1,9 +1,17 @@
 import { useEffect, useState } from 'react'
-import { App, DatePicker, Form, Input, Modal, Select } from 'antd'
+import { App, DatePicker, Form, Input, Select } from 'antd'
+import { CheckCircleOutlined } from '@ant-design/icons'
+import {
+  FormModal,
+  ConfirmModal,
+  ModalSummary,
+  ModalSummaryRow,
+  ModalNote,
+} from '@/shared/components/Modal'
 import dayjs, { type Dayjs } from 'dayjs'
 import { roomsApi } from '@/features/rooms/api/rooms.api'
 import { receptionApi } from '@/features/reception/api/reception.api'
-import { getErrorMessage } from '@/shared/api/client'
+import { applyApiError } from '@/shared/api/client'
 import { API_DATE_FORMAT, formatMoney } from '@/features/rooms/lib/stay'
 import type { Room } from '@/features/rooms/types'
 import type { Reservation } from '@/features/client/types'
@@ -45,7 +53,8 @@ export function ManualReservationModal({
 
   const [rooms, setRooms] = useState<Room[]>([])
   const [loadingRooms, setLoadingRooms] = useState(false)
-  const [saving, setSaving] = useState(false)
+  /** Valores validados esperando confirmación; null = sin confirmar. */
+  const [pending, setPending] = useState<FormValues | null>(null)
 
   useEffect(() => {
     if (open) {
@@ -89,46 +98,56 @@ export function ManualReservationModal({
 
   const hasDates = Boolean(stay?.[0] && stay?.[1])
 
-  const submit = async (values: FormValues) => {
-    const [checkIn, checkOut] = values.stay
-    setSaving(true)
+  /** Paso 1: valida el formulario y abre la confirmación con el resumen. */
+  const askConfirm = async () => {
+    try {
+      const values = await form.validateFields()
+      setPending(values)
+    } catch {
+      // Los errores de validación los pinta el propio Form.
+    }
+  }
+
+  /** Paso 2: confirmado por el recepcionista, se crea la reserva. */
+  const submit = async () => {
+    if (!pending) return
+    const [checkIn, checkOut] = pending.stay
     try {
       const reservation = await receptionApi.createManual({
-        room_id: values.room_id,
+        room_id: pending.room_id,
         check_in: checkIn.format(API_DATE_FORMAT),
         check_out: checkOut.format(API_DATE_FORMAT),
-        guests: values.guests,
+        guests: pending.guests,
         guest: {
-          name: values.name.trim(),
-          last_name: values.last_name.trim(),
-          email: values.email.trim(),
-          phone: values.phone?.trim() || undefined,
+          name: pending.name.trim(),
+          last_name: pending.last_name.trim(),
+          email: pending.email.trim(),
+          phone: pending.phone?.trim() || undefined,
         },
       })
-      message.success('Reserva creada. Se notificó al huésped por correo.')
+      message.success('Reserva creada. Se notificó al cliente por correo.')
       form.resetFields()
+      setPending(null)
       onCreated(reservation)
       onClose()
     } catch (error) {
-      message.error(getErrorMessage(error, 'No se pudo crear la reserva.'))
-    } finally {
-      setSaving(false)
+      // Cierra la confirmación y ancla el error en el formulario de atrás,
+      // para que el recepcionista vea qué campo corregir.
+      setPending(null)
+      applyApiError(error, form, 'No se pudo crear la reserva.')
     }
   }
 
   return (
-    <Modal
+    <FormModal
       open={open}
-      onCancel={onClose}
-      onOk={() => form.submit()}
-      okText="Crear reserva"
-      cancelText="Cancelar"
-      confirmLoading={saving}
+      onClose={onClose}
+      onSubmit={askConfirm}
+      submitText="Crear reserva"
       title="Nueva reserva"
       width={560}
-      destroyOnHidden
     >
-      <Form form={form} layout="vertical" requiredMark={false} onFinish={submit}>
+      <Form form={form} layout="vertical" requiredMark={false} onFinish={askConfirm}>
         <Form.Item
           name="stay"
           label="Entrada — Salida"
@@ -223,6 +242,41 @@ export function ManualReservationModal({
           <Input placeholder="88880000" inputMode="numeric" maxLength={8} />
         </Form.Item>
       </Form>
-    </Modal>
+
+      <ConfirmModal
+        open={pending !== null}
+        onClose={() => setPending(null)}
+        tone="success"
+        icon={<CheckCircleOutlined />}
+        title="¿Crear esta reserva?"
+        description="Revise los datos antes de registrarla."
+        confirmText="Sí, crear reserva"
+        cancelText="No, volver"
+        errorMessage="No se pudo crear la reserva."
+        onConfirm={submit}
+      >
+        {pending && (
+          <ModalSummary
+            heading={`${pending.name} ${pending.last_name}`.trim()}
+          >
+            <ModalSummaryRow label="Correo">{pending.email}</ModalSummaryRow>
+            <ModalSummaryRow label="Habitación">
+              {rooms.find((r) => r.id === pending.room_id)?.name ?? '—'}
+            </ModalSummaryRow>
+            <ModalSummaryRow label="Entrada">
+              {pending.stay[0].format('DD/MM/YYYY')}
+            </ModalSummaryRow>
+            <ModalSummaryRow label="Salida">
+              {pending.stay[1].format('DD/MM/YYYY')}
+            </ModalSummaryRow>
+            <ModalSummaryRow label="Personas">{pending.guests}</ModalSummaryRow>
+          </ModalSummary>
+        )}
+
+        <ModalNote tone="info">
+          Se enviará un correo de confirmación al cliente.
+        </ModalNote>
+      </ConfirmModal>
+    </FormModal>
   )
 }

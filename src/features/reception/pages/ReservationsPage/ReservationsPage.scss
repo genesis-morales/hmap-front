@@ -11,6 +11,17 @@
     margin-bottom: 16px;
   }
 
+  &__truncated {
+    margin-bottom: 16px;
+  }
+
+  &__filters {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
   &__tabs {
     display: inline-flex;
     background: $color-bg-alt;
