@@ -1,0 +1,102 @@
+@use '@/shared/styles/variables' as *;
+@use '@/shared/styles/mixins' as *;
+
+// --- Card de resumen (habitación / reserva / usuario) ---
+.hmap-summary {
+  background: $color-bg;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  &__heading {
+    font-family: $font-heading;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: $color-heading;
+    margin: 0;
+  }
+
+  &__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+
+  &__label {
+    @include label-caps;
+    color: $color-muted;
+    flex-shrink: 0;
+  }
+
+  &__value {
+    font-family: $font-label;
+    color: $color-text;
+    text-align: right;
+  }
+
+  // Fila destacada al pie (código de reserva)
+  &__code {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-top: 1px solid $color-border;
+    padding-top: 10px;
+
+    span {
+      @include label-caps;
+      color: $color-muted;
+    }
+
+    strong {
+      font-family: 'Courier New', monospace;
+      color: $color-forest;
+      letter-spacing: 0.06em;
+    }
+  }
+}
+
+// --- Nota / aviso con barra lateral ---
+.hmap-note {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border-radius: $radius-sm;
+  font-family: $font-label;
+  font-size: 0.88rem;
+  margin: 0;
+
+  .anticon {
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  &--info {
+    background: $color-bg-alt;
+    border-left: 3px solid $color-forest;
+    color: $color-text;
+  }
+
+  &--warning {
+    background: #fdf0dc;
+    border-left: 3px solid #d2932f;
+    color: #7a4a14;
+  }
+
+  &--danger {
+    background: #fbe4e1;
+    border-left: 3px solid $color-error;
+    color: #8c2f22;
+  }
+
+  &--plain {
+    padding: 0;
+    background: none;
+    border: none;
+    color: $color-muted;
+  }
+}

@@ -12,6 +12,7 @@ import {
 import { RoomPhoto } from '@/shared/components/RoomPhoto/RoomPhoto'
 import { localRoomImage } from '@/features/home/data/rooms'
 import { StatusTag } from '@/features/client/components/StatusTag/StatusTag'
+import { CancelReservationModal } from '@/features/client/components/CancelReservationModal/CancelReservationModal'
 import {
   getUiStatus,
   UI_STATUS_LABEL,
@@ -43,6 +44,7 @@ export function MyReservationsPage() {
   const [error, setError] = useState<string | null>(null)
   const [filter, setFilter] = useState<FilterKey>('TODAS')
   const [visible, setVisible] = useState(PAGE_SIZE)
+  const [cancelling, setCancelling] = useState<Reservation | null>(null)
 
   useEffect(() => {
     reservationsApi
@@ -164,6 +166,21 @@ export function MyReservationsPage() {
                 <Link to={`/panel/reservas/${reservation.id}`}>
                   Ver detalle <ArrowRightOutlined />
                 </Link>
+                {reservation.can_cancel ? (
+                  <button
+                    type="button"
+                    className="my-reservations__cancel"
+                    onClick={() => setCancelling(reservation)}
+                  >
+                    Cancelar reserva
+                  </button>
+                ) : (
+                  uiStatus === 'ACTIVA' && (
+                    <span className="my-reservations__window-note">
+                      Ya no admite cancelación (menos de 48 h)
+                    </span>
+                  )
+                )}
               </div>
             </div>
           </article>
@@ -185,6 +202,19 @@ export function MyReservationsPage() {
             </button>
           )}
         </footer>
+      )}
+
+      {cancelling && (
+        <CancelReservationModal
+          reservation={cancelling}
+          open={cancelling !== null}
+          onClose={() => setCancelling(null)}
+          onCancelled={(updated) =>
+            setReservations((list) =>
+              (list ?? []).map((r) => (r.id === updated.id ? updated : r)),
+            )
+          }
+        />
       )}
     </div>
   )

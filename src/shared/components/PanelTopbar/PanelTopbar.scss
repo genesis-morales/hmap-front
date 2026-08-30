@@ -16,6 +16,14 @@
     padding: 14px 48px;
   }
 
+  // Sin buscador (admin) la barra queda vacía en escritorio: solo aporta
+  // la hamburguesa y el brand en móvil.
+  &--mobile-only {
+    @include up($bp-lg) {
+      display: none;
+    }
+  }
+
   &__burger {
     background: none;
     border: none;
@@ -35,25 +43,14 @@
     }
   }
 
-  &__title {
-    display: none;
-    font-family: $font-heading;
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: $color-heading;
-    margin: 0;
-    white-space: nowrap;
-
-    @include up($bp-lg) {
-      display: block;
-    }
-  }
-
   &__search {
     width: 360px;
     max-width: 100%;
     border-radius: 999px;
     background: $color-input-fill;
+
+    // Sin título en la barra, el buscador se alinea a la derecha.
+    margin-left: auto;
 
     .ant-input {
       background: transparent;

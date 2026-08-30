@@ -1,7 +1,15 @@
 import { useEffect, useState } from 'react'
-import { App, Form, Input, InputNumber, Modal, Select } from 'antd'
+import { App, Form, Input, InputNumber, Select } from 'antd'
+import { EditOutlined, PlusOutlined } from '@ant-design/icons'
 import { roomsAdminApi } from '@/features/reception/api/roomsAdmin.api'
-import { getErrorMessage } from '@/shared/api/client'
+import { applyApiError } from '@/shared/api/client'
+import {
+  FormModal,
+  ConfirmModal,
+  ModalSummary,
+  ModalSummaryRow,
+} from '@/shared/components/Modal'
+import { formatMoney } from '@/features/rooms/lib/stay'
 import { ROOM_STATUSES, ROOM_STATUS_LABEL } from '@/features/reception/lib/roomStatus'
 import type { Room, RoomStatus } from '@/features/rooms/types'
 import type { RoomRequest } from '@/features/reception/types'
@@ -45,7 +53,8 @@ function toSlug(name: string): string {
 export function RoomFormModal({ room, open, onClose, onSaved }: RoomFormModalProps) {
   const { message } = App.useApp()
   const [form] = Form.useForm<FormValues>()
-  const [saving, setSaving] = useState(false)
+  /** Valores validados esperando confirmación; null = sin confirmar. */
+  const [pending, setPending] = useState<FormValues | null>(null)
   const editing = room !== null
 
   useEffect(() => {
@@ -72,16 +81,26 @@ export function RoomFormModal({ room, open, onClose, onSaved }: RoomFormModalPro
     }
   }, [open, room, form])
 
-  const submit = async (values: FormValues) => {
-    const payload: RoomRequest = {
-      ...values,
-      slug: values.slug?.trim() || toSlug(values.name),
-      images: values.images ?? [],
-      amenities: values.amenities ?? [],
-      bathroom: values.bathroom ?? [],
-      views: values.views ?? [],
+  /** Paso 1: valida el formulario y abre la confirmación con el resumen. */
+  const askConfirm = async () => {
+    try {
+      setPending(await form.validateFields())
+    } catch {
+      // Los errores de validación los pinta el propio Form.
     }
-    setSaving(true)
+  }
+
+  /** Paso 2: confirmado, se guarda la habitación. */
+  const submit = async () => {
+    if (!pending) return
+    const payload: RoomRequest = {
+      ...pending,
+      slug: pending.slug?.trim() || toSlug(pending.name),
+      images: pending.images ?? [],
+      amenities: pending.amenities ?? [],
+      bathroom: pending.bathroom ?? [],
+      views: pending.views ?? [],
+    }
     try {
       if (room) {
         await roomsAdminApi.update(room.id, payload)
@@ -90,28 +109,27 @@ export function RoomFormModal({ room, open, onClose, onSaved }: RoomFormModalPro
         await roomsAdminApi.create(payload)
         message.success('Habitación creada.')
       }
+      setPending(null)
       onSaved()
       onClose()
     } catch (error) {
-      message.error(getErrorMessage(error, 'No se pudo guardar la habitación.'))
-    } finally {
-      setSaving(false)
+      // Cierra la confirmación para que el error quede anclado en el formulario
+      // (p. ej. slug duplicado → bajo el input `slug`).
+      setPending(null)
+      applyApiError(error, form, 'No se pudo guardar la habitación.')
     }
   }
 
   return (
-    <Modal
+    <FormModal
       open={open}
-      onCancel={onClose}
-      onOk={() => form.submit()}
-      okText={editing ? 'Guardar cambios' : 'Crear habitación'}
-      cancelText="Cancelar"
-      confirmLoading={saving}
+      onClose={onClose}
+      onSubmit={askConfirm}
+      submitText={editing ? 'Guardar cambios' : 'Crear habitación'}
       title={editing ? 'Editar habitación' : 'Nueva habitación'}
       width={620}
-      destroyOnHidden
     >
-      <Form form={form} layout="vertical" requiredMark={false} onFinish={submit}>
+      <Form form={form} layout="vertical" requiredMark={false} onFinish={askConfirm}>
         <Form.Item
           name="name"
           label="Nombre"
@@ -201,6 +219,35 @@ export function RoomFormModal({ room, open, onClose, onSaved }: RoomFormModalPro
           <Select mode="tags" placeholder="hmap/rooms/suite-familiar/bed" open={false} />
         </Form.Item>
       </Form>
-    </Modal>
+
+      <ConfirmModal
+        open={pending !== null}
+        onClose={() => setPending(null)}
+        tone={editing ? 'warning' : 'success'}
+        icon={editing ? <EditOutlined /> : <PlusOutlined />}
+        title={editing ? '¿Guardar los cambios?' : '¿Crear esta habitación?'}
+        description="Revise los datos antes de continuar."
+        confirmText={editing ? 'Sí, guardar cambios' : 'Sí, crear habitación'}
+        cancelText="No, volver"
+        errorMessage="No se pudo guardar la habitación."
+        onConfirm={submit}
+      >
+        {pending && (
+          <ModalSummary heading={pending.name}>
+            <ModalSummaryRow label="Camas">{pending.beds_label}</ModalSummaryRow>
+            <ModalSummaryRow label="Capacidad">
+              {pending.capacity} personas
+            </ModalSummaryRow>
+            <ModalSummaryRow label="Área">{pending.area} m²</ModalSummaryRow>
+            <ModalSummaryRow label="Tarifa">
+              {formatMoney(pending.price_per_night)} /noche
+            </ModalSummaryRow>
+            <ModalSummaryRow label="Estado">
+              {ROOM_STATUS_LABEL[pending.status]}
+            </ModalSummaryRow>
+          </ModalSummary>
+        )}
+      </ConfirmModal>
+    </FormModal>
   )
 }

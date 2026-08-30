@@ -1,4 +1,4 @@
-import type { ReservationStatus } from '@/features/client/types'
+import type { ReservationStatus, ReservationType } from '@/features/client/types'
 
 type Tone = 'success' | 'warning' | 'danger' | 'neutral' | 'info'
 
@@ -35,3 +35,17 @@ export const FILTERABLE_STATUSES: ReservationStatus[] = [
   'PENDIENTE',
   'CANCELADA',
 ]
+
+// --- Origen de la reserva (campo `type`) ---
+
+/** Etiqueta legible del origen. */
+export const RESERVATION_TYPE_LABEL: Record<ReservationType, string> = {
+  ONLINE: 'En línea',
+  MANUAL: 'Manual',
+}
+
+/** Tono de la píldora por origen. */
+export const RESERVATION_TYPE_TONE: Record<ReservationType, Tone> = {
+  ONLINE: 'info',
+  MANUAL: 'neutral',
+}

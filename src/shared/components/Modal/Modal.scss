@@ -1,0 +1,100 @@
+@use 'sass:map';
+@use '@/shared/styles/variables' as *;
+@use '@/shared/styles/mixins' as *;
+
+// ============================================================
+//  Modales compartidos — Hotel Manuel Antonio Park
+//  Tonos por intención: danger / warning / success / info.
+// ============================================================
+
+$tones: (
+  'danger': (
+    soft: #fbe4e1,
+    strong: #8c2f22,
+    line: $color-error,
+  ),
+  'warning': (
+    soft: #fdf0dc,
+    strong: #8a5216,
+    line: #d2932f,
+  ),
+  'success': (
+    soft: #e2f1e8,
+    strong: #1f6141,
+    line: $color-success,
+  ),
+  'info': (
+    soft: #e8eeea,
+    strong: $color-forest,
+    line: $color-forest,
+  ),
+);
+
+.hmap-modal {
+  &__icon {
+    @include flex-center;
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 18px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+  }
+
+  &__title {
+    font-family: $font-heading;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: $color-heading;
+    margin: 0 0 6px;
+  }
+
+  &__description {
+    color: $color-muted;
+    font-family: $font-label;
+    margin: 0 0 20px;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  // --- Variante centrada (confirmaciones destructivas) ---
+  &--centered {
+    text-align: center;
+    padding: 12px 4px 4px;
+
+    .hmap-modal__body {
+      text-align: left;
+    }
+  }
+
+  // --- Variante en línea (título en el header de antd) ---
+  &--inline {
+    .hmap-modal__title,
+    .hmap-modal__icon {
+      display: none;
+    }
+  }
+
+  // --- Botonera ---
+  &__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+
+    &--stacked {
+      flex-direction: column;
+      gap: 12px;
+    }
+  }
+
+  @each $name, $map in $tones {
+    &--#{$name} .hmap-modal__icon {
+      background: map.get($map, soft);
+      color: map.get($map, strong);
+    }
+  }
+}

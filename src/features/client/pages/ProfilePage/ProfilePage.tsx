@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import { App, Button, Form, Input } from 'antd'
 import { ArrowRightOutlined, SafetyOutlined, TagOutlined } from '@ant-design/icons'
 import { useAuth } from '@/features/auth/context/AuthContext'
 import { profileApi } from '@/features/client/api/profile.api'
-import { getErrorMessage } from '@/shared/api/client'
+import { applyApiError } from '@/shared/api/client'
+import { ChangePasswordModal } from '@/features/client/components/ChangePasswordModal/ChangePasswordModal'
 import { getInitials } from '@/features/client/lib/reservationUi'
 import './ProfilePage.scss'
 
@@ -18,7 +18,9 @@ interface ProfileForm {
 export function ProfilePage() {
   const { user, updateUser } = useAuth()
   const { message } = App.useApp()
+  const [form] = Form.useForm<ProfileForm>()
   const [saving, setSaving] = useState(false)
+  const [passwordOpen, setPasswordOpen] = useState(false)
 
   if (!user) return null
 
@@ -33,7 +35,7 @@ export function ProfilePage() {
       updateUser(updated)
       message.success('Perfil actualizado con éxito.')
     } catch (error) {
-      message.error(getErrorMessage(error, 'No se pudo actualizar el perfil.'))
+      applyApiError(error, form, 'No se pudo actualizar el perfil.')
     } finally {
       setSaving(false)
     }
@@ -41,7 +43,7 @@ export function ProfilePage() {
 
   return (
     <div className="profile">
-      <h1 className="profile__title">Mi Perfil</h1>
+      <h1 className="profile__title">Editar mi perfil</h1>
 
       <section className="profile__card">
         <div className="profile__identity">
@@ -55,6 +57,7 @@ export function ProfilePage() {
         </div>
 
         <Form<ProfileForm>
+          form={form}
           layout="vertical"
           requiredMark={false}
           initialValues={{
@@ -107,9 +110,13 @@ export function ProfilePage() {
             <span className="profile__email-note">El correo no puede modificarse</span>
           </Form.Item>
 
-          <Link to="/panel/perfil/contrasena" className="profile__password-link">
+          <button
+            type="button"
+            className="profile__password-link"
+            onClick={() => setPasswordOpen(true)}
+          >
             Cambiar contraseña <ArrowRightOutlined />
-          </Link>
+          </button>
 
           <Button
             type="primary"
@@ -142,6 +149,11 @@ export function ProfilePage() {
           </p>
         </section>
       </div>
+
+      <ChangePasswordModal
+        open={passwordOpen}
+        onClose={() => setPasswordOpen(false)}
+      />
     </div>
   )
 }
