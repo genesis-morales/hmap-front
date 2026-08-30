@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { App, Button, Dropdown, Popconfirm } from 'antd'
+import { Button } from 'antd'
 import {
   CheckCircleOutlined,
   DeleteOutlined,
@@ -10,16 +10,15 @@ import {
   ToolOutlined,
 } from '@ant-design/icons'
 import { roomsApi } from '@/features/rooms/api/rooms.api'
-import { roomsAdminApi } from '@/features/reception/api/roomsAdmin.api'
-import { getErrorMessage } from '@/shared/api/client'
 import { Table, type Column } from '@/shared/components/Table/Table'
 import { StatCard } from '@/shared/components/StatCard/StatCard'
 import { RoomFormModal } from '@/features/reception/components/RoomFormModal/RoomFormModal'
+import { DeleteRoomModal } from '@/features/reception/components/DeleteRoomModal/DeleteRoomModal'
+import { RoomStatusModal } from '@/features/reception/components/RoomStatusModal/RoomStatusModal'
 import { PageHeader } from '@/shared/components/PageHeader/PageHeader'
 import { StatusTag } from '@/features/client/components/StatusTag/StatusTag'
 import { formatMoney } from '@/features/rooms/lib/stay'
 import {
-  ROOM_STATUSES,
   ROOM_STATUS_LABEL,
   ROOM_STATUS_TONE,
 } from '@/features/reception/lib/roomStatus'
@@ -35,13 +34,14 @@ const TABS: { key: string; label: string; status?: RoomStatus }[] = [
 
 /** HU-025 → HU-029 — Inventario de habitaciones. */
 export function RoomsPage() {
-  const { message } = App.useApp()
   const [rooms, setRooms] = useState<Room[] | null>(null)
   const [tab, setTab] = useState('TODAS')
   const [form, setForm] = useState<{ open: boolean; room: Room | null }>({
     open: false,
     room: null,
   })
+  const [statusModal, setStatusModal] = useState<Room | null>(null)
+  const [deleteModal, setDeleteModal] = useState<Room | null>(null)
 
   const load = useCallback(() => {
     setRooms(null)
@@ -65,28 +65,6 @@ export function RoomsPage() {
       total: all.length,
     }
   }, [rooms])
-
-  const changeStatus = async (room: Room, status: RoomStatus) => {
-    try {
-      await roomsAdminApi.setStatus(room.id, status)
-      message.success(`Estado actualizado a ${ROOM_STATUS_LABEL[status].toLowerCase()}.`)
-      load()
-    } catch (error) {
-      message.error(getErrorMessage(error, 'No se pudo cambiar el estado.'))
-    }
-  }
-
-  const remove = async (room: Room) => {
-    try {
-      await roomsAdminApi.remove(room.id)
-      message.success('Habitación eliminada.')
-      load()
-    } catch (error) {
-      message.error(
-        getErrorMessage(error, 'No se pudo eliminar (¿tiene reservas activas?).'),
-      )
-    }
-  }
 
   const columns: Column<Room>[] = [
     {
@@ -132,32 +110,20 @@ export function RoomsPage() {
           >
             <EditOutlined />
           </button>
-          <Dropdown
-            trigger={['click']}
-            menu={{
-              items: ROOM_STATUSES.filter((s) => s !== r.status).map((s) => ({
-                key: s,
-                label: `Marcar ${ROOM_STATUS_LABEL[s].toLowerCase()}`,
-                onClick: () => changeStatus(r, s),
-              })),
-            }}
+          <button
+            className="rooms-admin__icon"
+            title="Cambiar estado"
+            onClick={() => setStatusModal(r)}
           >
-            <button className="rooms-admin__icon" title="Cambiar estado">
-              <SwapOutlined />
-            </button>
-          </Dropdown>
-          <Popconfirm
-            title="Eliminar habitación"
-            description="Solo se puede si no tiene reservas activas."
-            okText="Eliminar"
-            cancelText="Cancelar"
-            okButtonProps={{ danger: true }}
-            onConfirm={() => remove(r)}
+            <SwapOutlined />
+          </button>
+          <button
+            className="rooms-admin__icon rooms-admin__icon--delete"
+            title="Eliminar"
+            onClick={() => setDeleteModal(r)}
           >
-            <button className="rooms-admin__icon rooms-admin__icon--delete" title="Eliminar">
-              <DeleteOutlined />
-            </button>
-          </Popconfirm>
+            <DeleteOutlined />
+          </button>
         </div>
       ),
     },
@@ -220,6 +186,20 @@ export function RoomsPage() {
         open={form.open}
         onClose={() => setForm({ open: false, room: null })}
         onSaved={load}
+      />
+
+      <RoomStatusModal
+        room={statusModal}
+        open={statusModal !== null}
+        onClose={() => setStatusModal(null)}
+        onChanged={load}
+      />
+
+      <DeleteRoomModal
+        room={deleteModal}
+        open={deleteModal !== null}
+        onClose={() => setDeleteModal(null)}
+        onDeleted={load}
       />
     </div>
   )

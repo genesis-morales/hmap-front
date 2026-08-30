@@ -4,11 +4,12 @@ import { App, Button, Col, Divider, Form, Input, Row } from 'antd'
 import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons'
 import { AuthCard } from '@/features/auth/components/AuthCard/AuthCard'
 import { useAuth } from '@/features/auth/context/AuthContext'
-import { getErrorMessage } from '@/shared/api/client'
+import { applyApiError } from '@/shared/api/client'
 
 interface RegisterForm {
   name: string
-  apellido: string
+  /** Coincide con el nombre del backend para que sus errores se anclen aquí. */
+  last_name: string
   email: string
   password: string
   confirm: string
@@ -20,6 +21,7 @@ export function RegisterPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const { message } = App.useApp()
+  const [form] = Form.useForm<RegisterForm>()
   const [loading, setLoading] = useState(false)
 
   // Igual que en login: retoma la ruta previa (RNF-006).
@@ -30,14 +32,14 @@ export function RegisterPage() {
     try {
       await register({
         name: values.name,
-        last_name: values.apellido,
+        last_name: values.last_name,
         email: values.email,
         password: values.password,
       })
       message.success('¡Cuenta creada con éxito!')
       navigate(from ?? '/panel', { replace: true })
     } catch (error) {
-      message.error(getErrorMessage(error, 'No se pudo crear la cuenta.'))
+      applyApiError(error, form, 'No se pudo crear la cuenta.')
     } finally {
       setLoading(false)
     }
@@ -47,6 +49,7 @@ export function RegisterPage() {
     <AuthCard>
       <Form
         className="auth-form"
+        form={form}
         layout="vertical"
         requiredMark={false}
         onFinish={onFinish}
@@ -67,7 +70,7 @@ export function RegisterPage() {
           </Col>
           <Col span={12}>
             <Form.Item
-              name="apellido"
+              name="last_name"
               label="Apellido"
               rules={[{ required: true, message: 'Ingresa tu apellido.' }]}
             >

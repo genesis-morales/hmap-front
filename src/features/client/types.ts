@@ -11,6 +11,12 @@ export type ReservationStatus =
   | 'CHECK_OUT'
   | 'CANCELADA'
 
+/**
+ * Origen de la reserva: ONLINE la creó el cliente desde el portal público
+ * (HU-009); MANUAL la creó un recepcionista o admin desde el panel (HU-020).
+ */
+export type ReservationType = 'ONLINE' | 'MANUAL'
+
 /** Titular de la reserva (añadido en E3: la recepción ve a quién pertenece). */
 export interface Guest {
   id: number
@@ -38,6 +44,8 @@ export interface Reservation {
   /** nights × price_per_night, calculado y persistido por la API. */
   total: number
   status: ReservationStatus
+  /** Origen de la reserva (portal público vs panel interno). */
+  type: ReservationType
   /** La API aplica la política de plazos (HU-012); el FE solo refleja el flag. */
   can_edit: boolean
   /** Ídem (HU-013). */

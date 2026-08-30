@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
-import { App, Form, Input, Modal, Select } from 'antd'
+import { App, Form, Input, Select } from 'antd'
 import { adminUsersApi } from '@/features/admin/api/adminUsers.api'
-import { getErrorMessage, getFieldErrors } from '@/shared/api/client'
+import { applyApiError } from '@/shared/api/client'
+import { FormModal } from '@/shared/components/Modal'
 import type { AssignableRole, CreateUserRequest } from '@/features/admin/types'
 import './CreateUserModal.scss'
 
@@ -55,33 +56,21 @@ export function CreateUserModal({ open, onClose, onCreated }: CreateUserModalPro
       onCreated()
       onClose()
     } catch (error) {
-      const fieldErrors = getFieldErrors(error)
-      if (Object.keys(fieldErrors).length > 0) {
-        form.setFields(
-          Object.entries(fieldErrors).map(([name, msg]) => ({
-            name: name as keyof FormValues,
-            errors: [msg],
-          })),
-        )
-      } else {
-        message.error(getErrorMessage(error, 'No se pudo crear el usuario.'))
-      }
+      applyApiError(error, form, 'No se pudo crear el usuario.')
     } finally {
       setSaving(false)
     }
   }
 
   return (
-    <Modal
+    <FormModal
       open={open}
-      onCancel={onClose}
-      onOk={() => form.submit()}
-      okText="Crear usuario"
-      cancelText="Cancelar"
-      confirmLoading={saving}
+      onClose={onClose}
+      onSubmit={() => form.submit()}
+      submitText="Crear usuario"
+      saving={saving}
       title="Nuevo usuario"
       width={560}
-      destroyOnClose
     >
       <Form
         form={form}
@@ -162,6 +151,6 @@ export function CreateUserModal({ open, onClose, onCreated }: CreateUserModalPro
           <span className="create-user-form__notice-value">Activo</span>
         </div>
       </Form>
-    </Modal>
+    </FormModal>
   )
 }

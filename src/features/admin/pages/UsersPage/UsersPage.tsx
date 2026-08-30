@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useState } from 'react'
 import { App, Button, Pagination } from 'antd'
-import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
+import {
+  PlusOutlined,
+  EditOutlined,
+  UserAddOutlined,
+  UserDeleteOutlined,
+} from '@ant-design/icons'
 import { adminUsersApi } from '@/features/admin/api/adminUsers.api'
 import { getErrorMessage } from '@/shared/api/client'
 import { Table, type Column } from '@/shared/components/Table/Table'
@@ -124,12 +129,14 @@ export function UsersPage() {
             <EditOutlined />
           </button>
           <button
-            className="users__icon users__icon--delete"
+            className={`users__icon ${
+              u.active ? 'users__icon--deactivate' : 'users__icon--activate'
+            }`}
             disabled={isSelf(u)}
-            title={u.active ? 'Desactivar' : 'Activar'}
+            title={u.active ? 'Desactivar usuario' : 'Activar usuario'}
             onClick={() => setToggling(u)}
           >
-            <DeleteOutlined />
+            {u.active ? <UserDeleteOutlined /> : <UserAddOutlined />}
           </button>
         </div>
       ),

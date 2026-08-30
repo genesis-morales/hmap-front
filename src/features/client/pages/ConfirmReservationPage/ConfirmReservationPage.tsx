@@ -23,6 +23,12 @@ import {
 } from '@/features/rooms/lib/stay'
 import { fromSearchParams, toSearchParams } from '@/features/rooms/lib/staySearch'
 import { StayDatesBar } from '@/features/client/components/StayDatesBar/StayDatesBar'
+import {
+  ConfirmModal,
+  ModalSummary,
+  ModalSummaryRow,
+  ModalNote,
+} from '@/shared/components/Modal'
 import { RoomPhoto } from '@/shared/components/RoomPhoto/RoomPhoto'
 import { localRoomImage } from '@/features/home/data/rooms'
 import type { Room } from '@/features/rooms/types'
@@ -40,7 +46,7 @@ export function ConfirmReservationPage() {
 
   const [room, setRoom] = useState<Room | null>(null)
   const [loadError, setLoadError] = useState<string | null>(null)
-  const [saving, setSaving] = useState(false)
+  const [confirmOpen, setConfirmOpen] = useState(false)
 
   const valid = search !== null && Number.isInteger(roomId) && roomId > 0
 
@@ -64,25 +70,16 @@ export function ConfirmReservationPage() {
   const total = room ? room.price_per_night * nights : 0
 
   const confirm = async () => {
-    setSaving(true)
-    try {
-      const reservation = await reservationsApi.create({
-        room_id: roomId,
-        check_in: search.check_in,
-        check_out: search.check_out,
-        guests: search.guests,
-      })
-      message.success(
-        '¡Reserva creada! Te enviamos un correo con la confirmación.',
-      )
-      navigate(`/panel/reservas/${reservation.id}`, { replace: true })
-    } catch (error) {
-      message.error(
-        getErrorMessage(error, 'No se pudo crear la reserva. Intenta de nuevo.'),
-      )
-    } finally {
-      setSaving(false)
-    }
+    const reservation = await reservationsApi.create({
+      room_id: roomId,
+      check_in: search.check_in,
+      check_out: search.check_out,
+      guests: search.guests,
+    })
+    message.success(
+      '¡Reserva creada! Te enviamos un correo con la confirmación.',
+    )
+    navigate(`/panel/reservas/${reservation.id}`, { replace: true })
   }
 
   return (
@@ -180,8 +177,7 @@ export function ConfirmReservationPage() {
             <Button
               type="primary"
               className="btn-cta confirm-reservation__cta"
-              onClick={confirm}
-              loading={saving}
+              onClick={() => setConfirmOpen(true)}
               disabled={!room}
               block
             >
@@ -203,6 +199,39 @@ export function ConfirmReservationPage() {
           </section>
         </aside>
       </div>
+
+      {room && (
+        <ConfirmModal
+          open={confirmOpen}
+          onClose={() => setConfirmOpen(false)}
+          tone="success"
+          icon={<CheckCircleOutlined />}
+          title="¿Confirmar esta reserva?"
+          description="Revisa los datos antes de continuar."
+          confirmText="Sí, confirmar reserva"
+          cancelText="No, volver"
+          stacked
+          errorMessage="No se pudo crear la reserva. Intenta de nuevo."
+          onConfirm={confirm}
+        >
+          <ModalSummary heading={room.name}>
+            <ModalSummaryRow label="Fechas">
+              {formatStayRange(search.check_in, search.check_out)}
+            </ModalSummaryRow>
+            <ModalSummaryRow label="Noches">
+              {nightsLabel(nights)}
+            </ModalSummaryRow>
+            <ModalSummaryRow label="Personas">{search.guests}</ModalSummaryRow>
+            <ModalSummaryRow label="Total a pagar">
+              <strong>{formatMoney(total)}</strong>
+            </ModalSummaryRow>
+          </ModalSummary>
+
+          <ModalNote tone="plain" icon={<CustomerServiceOutlined />}>
+            Te enviaremos un correo con la confirmación de la reserva.
+          </ModalNote>
+        </ConfirmModal>
+      )}
     </div>
   )
 }

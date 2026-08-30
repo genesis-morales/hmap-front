@@ -153,12 +153,38 @@
     margin-top: auto;
     padding-top: 12px;
     border-top: 1px solid $color-border;
-    text-align: right;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 18px;
 
     a {
       font-family: $font-label;
       font-weight: 600;
       font-size: 0.95rem;
+    }
+  }
+
+  &__window-note {
+    font-family: $font-label;
+    font-size: 0.82rem;
+    font-style: italic;
+    color: $color-muted;
+  }
+
+  &__cancel {
+    font-family: $font-label;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0;
+    background: none;
+    border: none;
+    color: $color-error;
+    cursor: pointer;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: #8c2f22;
     }
   }
 
