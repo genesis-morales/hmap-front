@@ -1,11 +1,16 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { App, Button } from 'antd'
-import { LoginOutlined, LogoutOutlined } from '@ant-design/icons'
+import {
+  CloseCircleOutlined,
+  LoginOutlined,
+  LogoutOutlined,
+} from '@ant-design/icons'
 import { receptionApi } from '@/features/reception/api/reception.api'
 import { getErrorMessage } from '@/shared/api/client'
 import { Table, type Column } from '@/shared/components/Table/Table'
 import { UserAvatar } from '@/shared/components/UserAvatar/UserAvatar'
-import { CheckInOutModal } from '@/features/reception/components/CheckInOutModal/CheckInOutModal'
+import { ReservationTransitionModal } from '@/features/reception/components/ReservationTransitionModal/ReservationTransitionModal'
+import { CancelReservationModal } from '@/features/reception/components/CancelReservationModal/CancelReservationModal'
 import { PageHeader } from '@/shared/components/PageHeader/PageHeader'
 import { StatusTag } from '@/features/client/components/StatusTag/StatusTag'
 import { formatLongDate } from '@/features/reception/lib/date'
@@ -26,6 +31,7 @@ export function CheckInOutPage() {
   const [data, setData] = useState<TodayReservations | null>(null)
   const [tab, setTab] = useState<Tab>('check-ins')
   const [modal, setModal] = useState<{ reservation: Reservation; mode: Tab } | null>(null)
+  const [cancelling, setCancelling] = useState<Reservation | null>(null)
 
   const load = useCallback(() => {
     receptionApi
@@ -99,13 +105,24 @@ export function CheckInOutPage() {
         header: 'Acción',
         align: 'right',
         render: (r) => (
-          <Button
-            type="primary"
-            className={mode === 'check-ins' ? 'btn-cta' : 'btn-forest'}
-            onClick={() => setModal({ reservation: r, mode })}
-          >
-            {mode === 'check-ins' ? 'Registrar check-in' : 'Registrar check-out'}
-          </Button>
+          <div className="checkinout__actions">
+            <Button
+              type="primary"
+              className={mode === 'check-ins' ? 'btn-cta' : 'btn-forest'}
+              onClick={() => setModal({ reservation: r, mode })}
+            >
+              {mode === 'check-ins' ? 'Registrar check-in' : 'Registrar check-out'}
+            </Button>
+            {mode === 'check-ins' && (
+              <button
+                className="checkinout__cancel"
+                title="Cancelar reserva"
+                onClick={() => setCancelling(r)}
+              >
+                <CloseCircleOutlined />
+              </button>
+            )}
+          </div>
         ),
       },
     ]
@@ -194,12 +211,19 @@ export function CheckInOutPage() {
         </>
       )}
 
-      <CheckInOutModal
+      <ReservationTransitionModal
         reservation={modal?.reservation ?? null}
-        mode={modal?.mode === 'check-outs' ? 'check-out' : 'check-in'}
+        action={modal?.mode === 'check-outs' ? 'check-out' : 'check-in'}
         open={modal !== null}
         onClose={() => setModal(null)}
         onDone={load}
+      />
+
+      <CancelReservationModal
+        reservation={cancelling}
+        open={cancelling !== null}
+        onClose={() => setCancelling(null)}
+        onCancelled={load}
       />
     </div>
   )

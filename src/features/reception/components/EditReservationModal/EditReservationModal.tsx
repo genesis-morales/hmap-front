@@ -1,10 +1,18 @@
 import { useEffect, useState } from 'react'
-import { App, DatePicker, Form, Modal, Select } from 'antd'
+import { App, DatePicker, Form, Select } from 'antd'
+import { EditOutlined } from '@ant-design/icons'
 import type { Dayjs } from 'dayjs'
 import dayjs from 'dayjs'
 import { reservationsApi } from '@/features/client/api/reservations.api'
-import { getErrorMessage } from '@/shared/api/client'
-import { API_DATE_FORMAT } from '@/features/rooms/lib/stay'
+import { applyApiError } from '@/shared/api/client'
+import {
+  FormModal,
+  ConfirmModal,
+  ModalSummary,
+  ModalSummaryRow,
+  ModalSummaryCode,
+} from '@/shared/components/Modal'
+import { API_DATE_FORMAT, formatStayRange } from '@/features/rooms/lib/stay'
 import type { Reservation } from '@/features/client/types'
 
 const { RangePicker } = DatePicker
@@ -30,7 +38,8 @@ export function EditReservationModal({
 }: EditReservationModalProps) {
   const { message } = App.useApp()
   const [form] = Form.useForm<FormValues>()
-  const [saving, setSaving] = useState(false)
+  /** Valores validados esperando confirmación; null = sin confirmar. */
+  const [pending, setPending] = useState<FormValues | null>(null)
 
   useEffect(() => {
     if (open && reservation) {
@@ -41,38 +50,46 @@ export function EditReservationModal({
     }
   }, [open, reservation, form])
 
-  const submit = async (values: FormValues) => {
-    if (!reservation) return
-    const [checkIn, checkOut] = values.stay
-    setSaving(true)
+  /** Paso 1: valida y abre la confirmación con el resumen. */
+  const askConfirm = async () => {
+    try {
+      setPending(await form.validateFields())
+    } catch {
+      // Los errores de validación los pinta el propio Form.
+    }
+  }
+
+  /** Paso 2: confirmado, se guardan los cambios. */
+  const submit = async () => {
+    if (!reservation || !pending) return
+    const [checkIn, checkOut] = pending.stay
     try {
       await reservationsApi.update(reservation.id, {
         check_in: checkIn.format(API_DATE_FORMAT),
         check_out: checkOut.format(API_DATE_FORMAT),
-        guests: values.guests,
+        guests: pending.guests,
       })
       message.success('Reserva actualizada.')
+      setPending(null)
       onSaved()
       onClose()
     } catch (error) {
-      message.error(getErrorMessage(error, 'No se pudo actualizar la reserva.'))
-    } finally {
-      setSaving(false)
+      // Cierra la confirmación para anclar el error en el formulario
+      // (p. ej. capacidad excedida → bajo `guests`).
+      setPending(null)
+      applyApiError(error, form, 'No se pudo actualizar la reserva.')
     }
   }
 
   return (
-    <Modal
+    <FormModal
       open={open}
-      onCancel={onClose}
-      onOk={() => form.submit()}
-      okText="Guardar cambios"
-      cancelText="Cancelar"
-      confirmLoading={saving}
+      onClose={onClose}
+      onSubmit={askConfirm}
+      submitText="Guardar cambios"
       title={`Editar reserva ${reservation?.code ?? ''}`}
-      destroyOnHidden
     >
-      <Form form={form} layout="vertical" requiredMark={false} onFinish={submit}>
+      <Form form={form} layout="vertical" requiredMark={false} onFinish={askConfirm}>
         <Form.Item
           name="stay"
           label="Entrada — Salida"
@@ -96,6 +113,37 @@ export function EditReservationModal({
           />
         </Form.Item>
       </Form>
-    </Modal>
+
+      <ConfirmModal
+        open={pending !== null}
+        onClose={() => setPending(null)}
+        tone="warning"
+        icon={<EditOutlined />}
+        title="¿Guardar estos cambios?"
+        description="Se actualizarán las fechas y el número de personas."
+        confirmText="Sí, guardar cambios"
+        cancelText="No, volver"
+        errorMessage="No se pudo actualizar la reserva."
+        onConfirm={submit}
+      >
+        {pending && reservation && (
+          <ModalSummary
+            heading={`${reservation.guest.name} ${reservation.guest.last_name}`}
+          >
+            <ModalSummaryRow label="Fechas actuales">
+              {formatStayRange(reservation.check_in, reservation.check_out)}
+            </ModalSummaryRow>
+            <ModalSummaryRow label="Fechas nuevas">
+              {formatStayRange(
+                pending.stay[0].format(API_DATE_FORMAT),
+                pending.stay[1].format(API_DATE_FORMAT),
+              )}
+            </ModalSummaryRow>
+            <ModalSummaryRow label="Personas">{pending.guests}</ModalSummaryRow>
+            <ModalSummaryCode code={reservation.code} />
+          </ModalSummary>
+        )}
+      </ConfirmModal>
+    </FormModal>
   )
 }

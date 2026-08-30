@@ -114,3 +114,18 @@ html {
     opacity: 0.6;
   }
 }
+
+// Botón verde bosque (acción destacada de los paneles internos y modales)
+.btn-forest.ant-btn-primary {
+  background: $color-forest;
+  border-color: $color-forest;
+
+  &:not(:disabled):hover {
+    background: $color-forest-deep;
+    border-color: $color-forest-deep;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+  }
+}

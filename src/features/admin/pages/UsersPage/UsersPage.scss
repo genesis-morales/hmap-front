@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use '@/shared/styles/variables' as *;
 @use '@/shared/styles/mixins' as *;
 
@@ -64,15 +65,20 @@
     }
 
     &:not(:disabled):hover {
-      background: darken($color-bg, 5%);
+      background: color.scale($color-bg, $lightness: -5%);
     }
 
     &--edit {
-      color: $color-info;
+      color: $color-forest;
     }
 
-    &--delete {
+    // Desactivar: acción destructiva. Activar: acción positiva.
+    &--deactivate {
       color: $color-error;
+    }
+
+    &--activate {
+      color: $color-success;
     }
   }
 

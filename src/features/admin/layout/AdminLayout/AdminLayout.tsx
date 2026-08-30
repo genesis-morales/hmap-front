@@ -28,7 +28,6 @@ export function AdminLayout() {
   return (
     <PanelLayout
       navItems={NAV_ITEMS}
-      title="Panel Administrativo"
       brandCaption="Administración"
       roleLabel="Admin"
     />

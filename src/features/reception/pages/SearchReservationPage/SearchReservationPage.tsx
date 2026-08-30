@@ -16,6 +16,8 @@ import {
   FILTERABLE_STATUSES,
   RESERVATION_STATUS_LABEL,
   RESERVATION_STATUS_TONE,
+  RESERVATION_TYPE_LABEL,
+  RESERVATION_TYPE_TONE,
 } from '@/features/reception/lib/reservationStatus'
 import type { Reservation, ReservationStatus } from '@/features/client/types'
 import type { Room } from '@/features/rooms/types'
@@ -121,6 +123,15 @@ export function SearchReservationPage() {
       render: (r) => (
         <StatusTag tone={RESERVATION_STATUS_TONE[r.status]}>
           {RESERVATION_STATUS_LABEL[r.status]}
+        </StatusTag>
+      ),
+    },
+    {
+      key: 'type',
+      header: 'Origen',
+      render: (r) => (
+        <StatusTag tone={RESERVATION_TYPE_TONE[r.type]}>
+          {RESERVATION_TYPE_LABEL[r.type]}
         </StatusTag>
       ),
     },

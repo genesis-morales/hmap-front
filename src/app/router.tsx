@@ -18,7 +18,6 @@ import { MyReservationsPage } from '@/features/client/pages/MyReservationsPage/M
 import { ReservationDetailPage } from '@/features/client/pages/ReservationDetailPage/ReservationDetailPage'
 import { EditReservationPage } from '@/features/client/pages/EditReservationPage/EditReservationPage'
 import { ProfilePage } from '@/features/client/pages/ProfilePage/ProfilePage'
-import { ChangePasswordPage } from '@/features/client/pages/ChangePasswordPage/ChangePasswordPage'
 import { ReceptionLayout } from '@/features/reception/layout/ReceptionLayout/ReceptionLayout'
 import { OccupancyPanelPage } from '@/features/reception/pages/OccupancyPanelPage/OccupancyPanelPage'
 import { CalendarPage } from '@/features/reception/pages/CalendarPage/CalendarPage'
@@ -70,7 +69,6 @@ export const router = createBrowserRouter([
           { path: 'reservas/:id', element: <ReservationDetailPage /> },
           { path: 'reservas/:id/editar', element: <EditReservationPage /> },
           { path: 'perfil', element: <ProfilePage /> },
-          { path: 'perfil/contrasena', element: <ChangePasswordPage /> },
         ],
       },
       // Panel de Recepcionista (E3) — rol RECEPCIONISTA o ADMINISTRADOR

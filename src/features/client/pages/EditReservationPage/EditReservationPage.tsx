@@ -4,6 +4,7 @@ import { App, Alert, Button, DatePicker, Select, Skeleton } from 'antd'
 import {
   CalendarOutlined,
   CheckCircleFilled,
+  EditOutlined,
   InfoCircleOutlined,
 } from '@ant-design/icons'
 import dayjs, { type Dayjs } from 'dayjs'
@@ -19,6 +20,12 @@ import {
 import { RoomPhoto } from '@/shared/components/RoomPhoto/RoomPhoto'
 import { localRoomImage } from '@/features/home/data/rooms'
 import { StatusTag } from '@/features/client/components/StatusTag/StatusTag'
+import {
+  ConfirmModal,
+  ModalSummary,
+  ModalSummaryRow,
+  ModalSummaryCode,
+} from '@/shared/components/Modal'
 import { STATUS_LABEL } from '@/features/client/lib/reservationUi'
 import type { Reservation } from '@/features/client/types'
 import './EditReservationPage.scss'
@@ -43,7 +50,7 @@ export function EditReservationPage() {
   const [checkOut, setCheckOut] = useState<Dayjs | null>(null)
   const [guests, setGuests] = useState<number>(2)
   const [check, setCheck] = useState<DatesCheck>({ state: 'idle' })
-  const [saving, setSaving] = useState(false)
+  const [confirmOpen, setConfirmOpen] = useState(false)
 
   useEffect(() => {
     if (!id) return
@@ -164,20 +171,13 @@ export function EditReservationPage() {
 
   const save = async () => {
     if (!checkIn || !checkOut) return
-    setSaving(true)
-    try {
-      const updated = await reservationsApi.update(reservation.id, {
-        check_in: checkIn.format(API_DATE_FORMAT),
-        check_out: checkOut.format(API_DATE_FORMAT),
-        guests,
-      })
-      message.success('Reserva actualizada con éxito.')
-      navigate(`/panel/reservas/${updated.id}`, { replace: true })
-    } catch (err) {
-      message.error(getErrorMessage(err, 'No se pudo actualizar la reserva.'))
-    } finally {
-      setSaving(false)
-    }
+    const updated = await reservationsApi.update(reservation.id, {
+      check_in: checkIn.format(API_DATE_FORMAT),
+      check_out: checkOut.format(API_DATE_FORMAT),
+      guests,
+    })
+    message.success('Reserva actualizada con éxito.')
+    navigate(`/panel/reservas/${updated.id}`, { replace: true })
   }
 
   return (
@@ -303,15 +303,48 @@ export function EditReservationPage() {
             <Button
               type="primary"
               className="btn-cta"
-              loading={saving}
               disabled={!checkIn || !checkOut || check.state === 'unavailable'}
-              onClick={save}
+              onClick={() => setConfirmOpen(true)}
             >
               Guardar cambios
             </Button>
           </footer>
         </div>
       </section>
+
+      <ConfirmModal
+        open={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        tone="warning"
+        icon={<EditOutlined />}
+        title="¿Guardar estos cambios?"
+        description="Se actualizarán las fechas y el número de personas."
+        confirmText="Sí, guardar cambios"
+        cancelText="No, seguir editando"
+        stacked
+        errorMessage="No se pudo actualizar la reserva."
+        onConfirm={save}
+      >
+        <ModalSummary heading={room.name}>
+          <ModalSummaryRow label="Fechas actuales">
+            {formatStayRange(reservation.check_in, reservation.check_out)}
+          </ModalSummaryRow>
+          <ModalSummaryRow label="Fechas nuevas">
+            {checkIn && checkOut
+              ? formatStayRange(
+                  checkIn.format(API_DATE_FORMAT),
+                  checkOut.format(API_DATE_FORMAT),
+                )
+              : '—'}
+          </ModalSummaryRow>
+          <ModalSummaryRow label="Noches">{nightsLabel(nights)}</ModalSummaryRow>
+          <ModalSummaryRow label="Personas">{guests}</ModalSummaryRow>
+          <ModalSummaryRow label="Nuevo total">
+            <strong>{formatMoney(total)}</strong>
+          </ModalSummaryRow>
+          <ModalSummaryCode code={reservation.code} />
+        </ModalSummary>
+      </ConfirmModal>
     </div>
   )
 }

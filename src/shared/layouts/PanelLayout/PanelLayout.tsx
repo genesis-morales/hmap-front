@@ -8,8 +8,6 @@ import './PanelLayout.scss'
 interface PanelLayoutProps {
   /** Items de navegación del sidebar. */
   navItems: NavItem[]
-  /** Título del panel (visible en topbar escritorio). */
-  title: string
   /** Caption bajo el logo en el sidebar. */
   brandCaption: string
   /** Etiqueta del rol en el footer del sidebar. */
@@ -26,7 +24,6 @@ interface PanelLayoutProps {
  */
 export function PanelLayout({
   navItems,
-  title,
   brandCaption,
   roleLabel,
   searchPlaceholder,
@@ -58,7 +55,6 @@ export function PanelLayout({
       </aside>
 
       <PanelTopbar
-        title={title}
         searchPlaceholder={searchPlaceholder}
         onSearch={searchPlaceholder ? handleSearch : undefined}
         onMenuOpen={() => setMenuOpen(true)}
