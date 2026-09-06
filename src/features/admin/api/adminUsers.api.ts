@@ -31,8 +31,8 @@ export const adminUsersApi = {
   },
 
   /** Activar o suspender cuenta (HU-033). */
-  setActive(id: number, active: boolean) {
-    const payload: UpdateUserActiveRequest = { active }
+  setActive(id: number, active: boolean, observation?: string) {
+    const payload: UpdateUserActiveRequest = { active, observation }
     return apiClient
       .patch<AdminUser>(`/users/${id}/active`, payload)
       .then((r) => r.data)

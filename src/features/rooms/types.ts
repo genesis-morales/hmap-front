@@ -6,6 +6,8 @@ export interface Room {
   id: number
   /** Identificador legible para URLs, p. ej. 'deluxe-cama-grande'. */
   slug: string
+  /** Número de habitación (llave natural, única), p. ej. '101', 'A-3'. */
+  room_number: string
   name: string
   description: string
   capacity: number

@@ -72,6 +72,11 @@ export function RoomsPage() {
       header: '# Hab',
       render: (r) => <span className="rooms-admin__id">{r.id}</span>,
     },
+    {
+      key: 'room_number',
+      header: 'Número',
+      render: (r) => <span className="rooms-admin__room-number">{r.room_number}</span>
+    },
     { key: 'name', header: 'Habitación', render: (r) => r.name },
     { key: 'beds', header: 'Camas', render: (r) => r.beds_label },
     {
