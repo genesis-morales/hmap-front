@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { App, Button, Checkbox, Divider, Form, Input } from 'antd'
-import { LockOutlined, MailOutlined } from '@ant-design/icons'
+import { App, Button, Checkbox, Divider, Form, Input, Modal } from 'antd'
+import { LockOutlined, MailOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
+import axios from 'axios'
 import { AuthCard } from '@/features/auth/components/AuthCard/AuthCard'
 import { useAuth } from '@/features/auth/context/AuthContext'
-import { homePathForRole } from '@/features/auth/lib/roleHome'
+import { homePathForRole, isRouteAccessibleForRole } from '@/features/auth/lib/roleHome'
 import { getErrorMessage } from '@/shared/api/client'
 import type { LoginRequest } from '@/features/auth/types'
 
@@ -28,10 +29,31 @@ export function LoginPage() {
     setLoading(true)
     try {
       const user = await login({ email: values.email, password: values.password })
+
+      // Validar que la ruta 'from' sea accesible para el rol que acaba de logear.
+      // Si no lo es (ej: admin hizo logout desde /panel-admin/usuarios y ahora
+      // recepción intenta logear), usar la ruta home del rol actual.
+      let destination = homePathForRole(user.role)
+      if (from && isRouteAccessibleForRole(from, user.role)) {
+        destination = from
+      }
+
       message.success('¡Bienvenido de vuelta!')
-      navigate(from ?? homePathForRole(user.role), { replace: true })
+      navigate(destination, { replace: true })
     } catch (error) {
-      message.error(getErrorMessage(error, 'Correo o contraseña incorrectos.'))
+      // Si es 403, mostrar el mensaje del backend en un modal
+      if (axios.isAxiosError(error) && error.response?.status === 403) {
+        const detail = error.response?.data?.detail
+        Modal.warning({
+          title: 'Cuenta desactivada',
+          icon: <ExclamationCircleOutlined />,
+          content: detail || 'Tu cuenta se encuentra desactivada. Contacta con la administración.',
+          okText: 'Entendido',
+          centered: true,
+        })
+      } else {
+        message.error(getErrorMessage(error, 'Correo o contraseña incorrectos.'))
+      }
     } finally {
       setLoading(false)
     }

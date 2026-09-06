@@ -12,6 +12,8 @@ export interface AdminUser {
   phone: string | null
   role: UserRole
   active: boolean
+  /** Motivo de la desactivación (null si nunca fue desactivado o fue reactivado). */
+  deactivation_reason: string | null
   created_at: string // ISO datetime
 }
 
@@ -36,6 +38,8 @@ export interface UpdateUserRequest {
 /** PATCH /users/{id}/active — activar/suspender. */
 export interface UpdateUserActiveRequest {
   active: boolean
+  /** Motivo de la desactivación (obligatorio cuando active: false). */
+  observation?: string
 }
 
 /** Filtros de GET /users (todos opcionales). */

@@ -51,6 +51,7 @@ export interface ManualReservationRequest {
 /** POST/PUT /rooms — alta y edición de habitación (HU-025/026). */
 export interface RoomRequest {
   slug: string
+  room_number: string
   name: string
   description: string
   capacity: number

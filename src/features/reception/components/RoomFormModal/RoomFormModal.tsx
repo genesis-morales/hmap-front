@@ -26,6 +26,7 @@ interface RoomFormModalProps {
 interface FormValues {
   name: string
   slug: string
+  room_number: string
   description: string
   capacity: number
   area: number
@@ -63,6 +64,7 @@ export function RoomFormModal({ room, open, onClose, onSaved }: RoomFormModalPro
       form.setFieldsValue({
         name: room.name,
         slug: room.slug,
+        room_number: room.room_number,
         description: room.description,
         capacity: room.capacity,
         area: room.area,
@@ -96,6 +98,7 @@ export function RoomFormModal({ room, open, onClose, onSaved }: RoomFormModalPro
     const payload: RoomRequest = {
       ...pending,
       slug: pending.slug?.trim() || toSlug(pending.name),
+      room_number: pending.room_number.trim(),
       images: pending.images ?? [],
       amenities: pending.amenities ?? [],
       bathroom: pending.bathroom ?? [],
@@ -138,12 +141,24 @@ export function RoomFormModal({ room, open, onClose, onSaved }: RoomFormModalPro
           <Input placeholder="Suite Familiar" />
         </Form.Item>
 
-        <Form.Item
-          name="slug"
-          label="Slug (identificador para URL; se genera del nombre si se deja vacío)"
-        >
-          <Input placeholder="suite-familiar" />
-        </Form.Item>
+        <div className="room-form__grid room-form__grid--2">
+          <Form.Item
+            name="room_number"
+            label="Número de habitación"
+            rules={[
+              { required: true, message: 'Ingresa el número de habitación.' },
+              { max: 10, message: 'Máximo 10 caracteres.' },
+            ]}
+          >
+            <Input placeholder="Ej. 101, 102, A-3" />
+          </Form.Item>
+          <Form.Item
+            name="slug"
+            label="Slug (identificador para URL; se genera del nombre si se deja vacío)"
+          >
+            <Input placeholder="suite-familiar" />
+          </Form.Item>
+        </div>
 
         <Form.Item
           name="description"
@@ -234,6 +249,7 @@ export function RoomFormModal({ room, open, onClose, onSaved }: RoomFormModalPro
       >
         {pending && (
           <ModalSummary heading={pending.name}>
+            <ModalSummaryRow label="Número">{pending.room_number}</ModalSummaryRow>
             <ModalSummaryRow label="Camas">{pending.beds_label}</ModalSummaryRow>
             <ModalSummaryRow label="Capacidad">
               {pending.capacity} personas
