@@ -1,73 +1,92 @@
-# React + TypeScript + Vite
+# HMAP Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend de la plataforma de gestión de reservas y recepción del Hotel Manuel Antonio Park.
 
-Currently, two official plugins are available:
+## Stack Tecnológico
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **React 19** + **TypeScript**
+- **Vite** - Build tool y dev server
+- **Ant Design** - Component library
+- **React Router 7** - Routing
+- **Axios** - HTTP client
+- **SCSS** - Estilos
 
-## React Compiler
+## Requisitos
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Node.js 18+
+- npm 9+
 
-## Expanding the ESLint configuration
+## Instalación
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+\`\`\`bash
+npm install
+\`\`\`
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Configuración
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Copia \`.env.example\` a \`.env\` y configura:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+\`\`\`env
+VITE_API_URL=http://localhost:8080
+VITE_GOOGLE_MAPS_API_KEY=tu_api_key
+\`\`\`
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Desarrollo
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+\`\`\`bash
+npm run dev
+\`\`\`
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+La aplicación estará disponible en http://localhost:5173
+
+## Build para Producción
+
+\`\`\`bash
+npm run build
+\`\`\`
+
+Los archivos optimizados se generan en \`dist/\`
+
+## Tests
+
+\`\`\`bash
+# Tests E2E con Playwright
+npm run test:e2e
+
+# Tests de integración API
+npm run test:api
+\`\`\`
+
+## Estructura del Proyecto
+
+\`\`\`
+src/
+├── app/           # Configuración de la app y router
+├── features/      # Módulos por funcionalidad
+│   ├── auth/      # Autenticación y autorización
+│   ├── client/    # Portal del cliente
+│   ├── reception/ # Panel de recepción
+│   ├── admin/     # Panel de administración
+│   └── rooms/     # Catálogo de habitaciones
+└── shared/        # Componentes y utilidades compartidas
+\`\`\`
+
+## Roles y Permisos
+
+- **CLIENTE** - Portal de cliente (\`/panel\`)
+- **RECEPCIONISTA** - Panel de recepción (\`/panel-reception\`)
+- **ADMINISTRADOR** - Panel de administración (\`/panel-admin\`) + acceso a recepción
+
+## Deploy
+
+El frontend es una SPA estática. Puede desplegarse en cualquier servicio de hosting estático:
+- Vercel
+- Netlify
+- AWS S3 + CloudFront
+- Nginx/Apache
+
+Asegúrate de configurar el fallback a \`index.html\` para que el routing del lado del cliente funcione correctamente.
+
+## Licencia
+
+Proyecto de graduación - Universidad Fidélitas

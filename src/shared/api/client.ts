@@ -22,13 +22,29 @@ apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   return config
 })
 
-// Limpia la sesión ante un 401.
+// Interceptor de respuestas: maneja errores de autenticación.
 apiClient.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem(TOKEN_STORAGE_KEY)
+    const status = error.response?.status
+    const url = error.config?.url || ''
+
+    // Caso especial: errores en /auth/login (401 o 403)
+    // NO limpiar sesión aquí, dejar que LoginPage maneje el error.
+    if (url.includes('/auth/login')) {
+      return Promise.reject(error)
     }
+
+    // Caso 1: Token expirado o inválido (401) → cerrar sesión
+    if (status === 401) {
+      localStorage.removeItem(TOKEN_STORAGE_KEY)
+      // RequireAuth redirigirá al login automáticamente
+    }
+
+    // Caso 2: Sin permiso (403) en ruta protegida → NO cerrar sesión
+    // El usuario está logueado, solo no tiene permiso para esa acción.
+    // El componente que hizo la llamada debe manejar el error.
+
     return Promise.reject(error)
   },
 )

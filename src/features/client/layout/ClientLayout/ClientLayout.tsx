@@ -20,14 +20,16 @@ export function ClientLayout() {
       </aside>
 
       <header className="client-layout__topbar">
-        <Brand size={36} />
-        <button
-          className="client-layout__burger"
-          aria-label="Abrir menú"
-          onClick={() => setMenuOpen(true)}
-        >
-          <MenuOutlined />
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <button
+            className="client-layout__burger"
+            aria-label="Abrir menú"
+            onClick={() => setMenuOpen(true)}
+          >
+            <MenuOutlined />
+          </button>
+          <Brand size={36} />
+        </div>
       </header>
 
       <Drawer
