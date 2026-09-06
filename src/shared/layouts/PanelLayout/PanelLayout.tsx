@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import { Drawer } from 'antd'
 import { PanelTopbar } from '@/shared/components/PanelTopbar/PanelTopbar'
 import { PanelSidebar, type NavItem } from './PanelSidebar'
@@ -30,17 +30,11 @@ export function PanelLayout({
   onSearch,
 }: PanelLayoutProps) {
   const [menuOpen, setMenuOpen] = useState(false)
-  const navigate = useNavigate()
 
   const handleSearch = (term: string) => {
     if (onSearch) {
       onSearch(term)
     }
-  }
-
-  const handleLogout = () => {
-    setMenuOpen(false)
-    navigate('/', { replace: true })
   }
 
   return (
@@ -50,7 +44,6 @@ export function PanelLayout({
           navItems={navItems}
           brandCaption={brandCaption}
           roleLabel={roleLabel}
-          onNavigate={handleLogout}
         />
       </aside>
 
@@ -72,10 +65,7 @@ export function PanelLayout({
           navItems={navItems}
           brandCaption={brandCaption}
           roleLabel={roleLabel}
-          onNavigate={() => {
-            setMenuOpen(false)
-            // El logout real lo ejecuta PanelSidebar.
-          }}
+          onNavigate={() => setMenuOpen(false)}
         />
       </Drawer>
 

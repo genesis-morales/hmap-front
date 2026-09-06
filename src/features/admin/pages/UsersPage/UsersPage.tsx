@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useState } from 'react'
-import { App, Button, Pagination } from 'antd'
+import { App, Button, Pagination, Tooltip } from 'antd'
 import {
   PlusOutlined,
   EditOutlined,
   UserAddOutlined,
   UserDeleteOutlined,
+  InfoCircleOutlined,
 } from '@ant-design/icons'
 import { adminUsersApi } from '@/features/admin/api/adminUsers.api'
 import { getErrorMessage } from '@/shared/api/client'
@@ -109,9 +110,16 @@ export function UsersPage() {
       key: 'status',
       header: 'Estado',
       render: (u) => (
-        <StatusTag tone={USER_ACTIVE_TONE[String(u.active)]}>
-          {USER_ACTIVE_LABEL[String(u.active)]}
-        </StatusTag>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <StatusTag tone={USER_ACTIVE_TONE[String(u.active)]}>
+            {USER_ACTIVE_LABEL[String(u.active)]}
+          </StatusTag>
+          {!u.active && u.deactivation_reason && (
+            <Tooltip title={u.deactivation_reason} placement="top">
+              <InfoCircleOutlined style={{ color: '#8c8c8c', cursor: 'help' }} />
+            </Tooltip>
+          )}
+        </div>
       ),
     },
     {

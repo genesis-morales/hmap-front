@@ -1,8 +1,11 @@
-import { App } from 'antd'
+import { useEffect } from 'react'
+import { App, Form, Input } from 'antd'
 import { UserSwitchOutlined } from '@ant-design/icons'
 import { adminUsersApi } from '@/features/admin/api/adminUsers.api'
+import { applyApiError } from '@/shared/api/client'
 import {
   ConfirmModal,
+  FormModal,
   ModalSummary,
   ModalSummaryRow,
   ModalNote,
@@ -24,6 +27,10 @@ interface ToggleActiveModalProps {
   onToggled: () => void
 }
 
+interface DeactivationForm {
+  observation: string
+}
+
 /** HU-033 — Activar o desactivar cuenta de usuario. */
 export function ToggleActiveModal({
   user,
@@ -32,32 +39,84 @@ export function ToggleActiveModal({
   onToggled,
 }: ToggleActiveModalProps) {
   const { message } = App.useApp()
+  const [form] = Form.useForm<DeactivationForm>()
+
+  useEffect(() => {
+    if (open) {
+      form.resetFields()
+    }
+  }, [open, form])
 
   if (!user) return null
 
   const newState = !user.active
-  const action = newState ? 'activar' : 'desactivar'
-  const actionCapitalized = newState ? 'Activar' : 'Desactivar'
 
-  const handleConfirm = async () => {
-    await adminUsersApi.setActive(user.id, newState)
-    message.success(
-      `Usuario ${newState ? 'activado' : 'desactivado'} correctamente.`,
+  // Caso 1: ACTIVAR usuario → ConfirmModal simple
+  if (newState === true) {
+    const handleActivate = async () => {
+      await adminUsersApi.setActive(user.id, true)
+      message.success('Usuario activado correctamente.')
+      onToggled()
+    }
+
+    return (
+      <ConfirmModal
+        open={open}
+        onClose={onClose}
+        tone="success"
+        icon={<UserSwitchOutlined />}
+        title="¿Activar usuario?"
+        description="Estás a punto de activar la cuenta de:"
+        confirmText="Activar"
+        errorMessage="No se pudo activar el usuario."
+        onConfirm={handleActivate}
+      >
+        <ModalSummary>
+          <ModalSummaryRow label="Nombre">
+            {user.name} {user.last_name}
+          </ModalSummaryRow>
+          <ModalSummaryRow label="Correo">{user.email}</ModalSummaryRow>
+          <ModalSummaryRow label="Rol">
+            <StatusTag tone={USER_ROLE_TONE[user.role]}>
+              {USER_ROLE_LABEL[user.role]}
+            </StatusTag>
+          </ModalSummaryRow>
+          <ModalSummaryRow label="Estado actual">
+            <StatusTag tone={USER_ACTIVE_TONE[String(user.active)]}>
+              {USER_ACTIVE_LABEL[String(user.active)]}
+            </StatusTag>
+          </ModalSummaryRow>
+        </ModalSummary>
+      </ConfirmModal>
     )
-    onToggled()
+  }
+
+  // Caso 2: DESACTIVAR usuario → FormModal con textarea obligatorio
+  const handleDeactivate = async () => {
+    try {
+      const { observation } = await form.validateFields()
+      await adminUsersApi.setActive(user.id, false, observation)
+      message.success('Usuario desactivado correctamente.')
+      onToggled()
+      onClose()
+    } catch (error) {
+      // Si es error de validación del formulario, no hacer nada (Antd ya lo muestra)
+      if (error && typeof error === 'object' && 'errorFields' in error) {
+        return
+      }
+      // Si es error de la API, anclar los errores al formulario
+      applyApiError(error, form, 'No se pudo desactivar el usuario.')
+    }
   }
 
   return (
-    <ConfirmModal
+    <FormModal
       open={open}
       onClose={onClose}
-      tone={newState ? 'success' : 'danger'}
-      icon={<UserSwitchOutlined />}
-      title={`¿${actionCapitalized} usuario?`}
-      description={`Estás a punto de ${action} la cuenta de:`}
-      confirmText={actionCapitalized}
-      errorMessage={`No se pudo ${action} el usuario.`}
-      onConfirm={handleConfirm}
+      onSubmit={handleDeactivate}
+      submitText="Desactivar"
+      title="¿Desactivar usuario?"
+      width={560}
     >
       <ModalSummary>
         <ModalSummaryRow label="Nombre">
@@ -76,11 +135,27 @@ export function ToggleActiveModal({
         </ModalSummaryRow>
       </ModalSummary>
 
-      {!newState && (
-        <ModalNote tone="danger">
-          Un usuario desactivado no podrá iniciar sesión.
-        </ModalNote>
-      )}
-    </ConfirmModal>
+      <ModalNote tone="danger">
+        Un usuario desactivado no podrá iniciar sesión.
+      </ModalNote>
+
+      <Form form={form} layout="vertical" requiredMark={false}>
+        <Form.Item
+          name="observation"
+          label="Motivo de la desactivación"
+          rules={[
+            { required: true, message: 'Debes indicar el motivo de la desactivación.' },
+            { max: 300, message: 'Máximo 300 caracteres.' },
+          ]}
+        >
+          <Input.TextArea
+            rows={3}
+            placeholder="Indica el motivo de la desactivación (máx. 300 caracteres)"
+            showCount
+            maxLength={300}
+          />
+        </Form.Item>
+      </Form>
+    </FormModal>
   )
 }

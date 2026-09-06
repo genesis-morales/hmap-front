@@ -37,8 +37,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     authApi
       .me()
-      .then(setUser)
-      .catch(() => localStorage.removeItem(TOKEN_STORAGE_KEY))
+      .then((u) => {
+        setUser(u)
+      })
+      .catch(() => {
+        localStorage.removeItem(TOKEN_STORAGE_KEY)
+      })
       .finally(() => setLoading(false))
   }, [])
 
