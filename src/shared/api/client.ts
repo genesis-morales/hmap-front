@@ -10,7 +10,7 @@ import { env, TOKEN_STORAGE_KEY } from '@/shared/config/env'
 export const apiClient = axios.create({
   baseURL: env.apiUrl,
   headers: { 'Content-Type': 'application/json' },
-  timeout: 15000,
+  timeout: 60000,
 })
 
 // Adjunta el JWT (si existe) a cada petición.
