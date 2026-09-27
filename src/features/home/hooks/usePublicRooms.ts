@@ -13,11 +13,10 @@ import type { Room as ApiRoom } from '@/features/rooms/types'
 function toViewRoom(api: ApiRoom): Room {
   const local = getRoomBySlug(api.slug)
   const cdnImages = api.images.filter((url) => /^https?:\/\//.test(url))
-  // Priorizar imágenes locales (ya tienen el orden correcto con la portada
-  // definida por `priority` en rooms.ts); CDN como respaldo.
-  const chosen = local?.images && local.images.length > 0
-    ? local.images
-    : cdnImages
+  // Priorizar imágenes del CDN (Cloudinary); usar locales solo como respaldo.
+  const chosen = cdnImages.length > 0
+    ? cdnImages
+    : (local?.images ?? [])
 
   return {
     slug: api.slug,

@@ -16,7 +16,8 @@ test.describe('Autenticación', () => {
     await page.getByLabel(/nombre/i).first().fill('Nuevo')
     await page.getByLabel(/apellido/i).fill('Cliente')
     await page.getByLabel(/correo|email/i).fill(email)
-    await page.getByLabel(/contraseña|password/i).fill('Secret123!')
+    await page.getByLabel('Contraseña', { exact: true }).fill('Secret123!')
+    await page.getByLabel(/confirmar contraseña/i).fill('Secret123!')
     await page.getByRole('button', { name: /registrar|crear cuenta/i }).click()
     // Debe redirigir fuera de /registro tras registro exitoso
     await expect(page).not.toHaveURL(/\/registro$/)

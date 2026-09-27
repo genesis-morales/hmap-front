@@ -1,10 +1,10 @@
 /**
  * Cliente HTTP tipado para tests de integración contra la API real.
  * Usa fetch nativo (Node 18+). La base URL se configura con la variable
- * de entorno API_URL (por defecto http://localhost:8080).
+ * de entorno VITE_API_URL (por defecto http://localhost:8080).
  */
 
-const BASE_URL = process.env.API_URL ?? 'http://localhost:8080'
+const BASE_URL = process.env.VITE_API_URL ?? 'http://localhost:8080'
 
 interface ApiOptions {
   method?: string

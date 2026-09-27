@@ -5,9 +5,9 @@ test.describe('Panel de Recepción', () => {
 
   test('el dashboard de ocupación muestra los conteos', async ({ page }) => {
     await page.goto('/panel-reception')
-    await expect(page.getByText(/disponible/i)).toBeVisible()
-    await expect(page.getByText(/ocupad/i)).toBeVisible()
-    await expect(page.getByText(/mantenimiento/i)).toBeVisible()
+    await expect(page.getByText(/disponible/i).first()).toBeVisible()
+    await expect(page.getByText(/ocupad/i).first()).toBeVisible()
+    await expect(page.getByText(/mantenimiento/i).first()).toBeVisible()
   })
 
   test('la página de check-in/out muestra la tabla', async ({ page }) => {
@@ -32,10 +32,10 @@ test.describe('Panel de Recepción', () => {
 
   test('crear una reserva manual', async ({ page }) => {
     await page.goto('/panel-reception')
-    // Click en "Nueva reserva" desde el dashboard
-    await page.getByRole('button', { name: /nueva reserva/i }).click()
-    // El modal de reserva manual debe abrirse
-    await expect(page.getByText(/reserva manual|nueva reserva/i)).toBeVisible()
+    // Click en "Nueva reserva" desde el dashboard (usar el primer botón)
+    await page.getByRole('button', { name: /nueva reserva/i }).first().click()
+    // El modal de reserva manual debe abrirse (verificar por el título del modal)
+    await expect(page.getByRole('dialog')).toBeVisible()
   })
 
   test('la búsqueda de reservas funciona', async ({ page }) => {
