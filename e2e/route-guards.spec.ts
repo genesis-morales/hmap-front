@@ -36,7 +36,7 @@ test.describe('Guardas de ruta por rol (RNF-001)', () => {
       await page.goto('/panel-reception')
       // El admin tiene acceso (rol ADMINISTRADOR está permitido)
       await expect(page).toHaveURL(/\/panel-reception/)
-      await expect(page.getByText(/disponible/i)).toBeVisible()
+      await expect(page.getByText(/disponible/i).first()).toBeVisible()
     })
   })
 })
