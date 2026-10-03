@@ -1,4 +1,5 @@
-import { App } from 'antd'
+import { useState } from 'react'
+import { App, Input } from 'antd'
 import { CalendarOutlined, ExclamationOutlined, InfoCircleOutlined } from '@ant-design/icons'
 import { reservationsApi } from '@/features/client/api/reservations.api'
 import { ConfirmModal, ModalSummary, ModalSummaryCode, ModalNote } from '@/shared/components/Modal'
@@ -21,9 +22,10 @@ export function CancelReservationModal({
   onCancelled,
 }: CancelReservationModalProps) {
   const { message } = App.useApp()
+  const [reason, setReason] = useState('')
 
   const confirm = async () => {
-    const updated = await reservationsApi.cancel(reservation.id)
+    const updated = await reservationsApi.cancel(reservation.id, reason || undefined)
     message.success('Reserva cancelada. Te enviamos un correo de confirmación.')
     onCancelled(updated)
   }
@@ -49,6 +51,21 @@ export function CancelReservationModal({
         </ModalNote>
         <ModalSummaryCode code={reservation.code} />
       </ModalSummary>
+
+      <div style={{ marginBottom: '16px' }}>
+        <label htmlFor="cancel-reason" style={{ display: 'block', marginBottom: '8px', fontSize: '14px' }}>
+          Motivo de cancelación (opcional)
+        </label>
+        <Input.TextArea
+          id="cancel-reason"
+          placeholder="Puedes indicarnos por qué cancelas tu reserva..."
+          value={reason}
+          onChange={(e) => setReason(e.target.value)}
+          rows={3}
+          maxLength={500}
+          showCount
+        />
+      </div>
 
       <ModalNote tone="plain" icon={<InfoCircleOutlined />}>
         Se enviará un correo de confirmación de cancelación a tu correo
