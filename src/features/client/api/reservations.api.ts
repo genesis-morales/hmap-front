@@ -28,7 +28,9 @@ export const reservationsApi = {
   },
 
   /** Cancela dentro de la ventana; la API envía el correo (HU-036). */
-  cancel(id: number | string) {
-    return apiClient.post<Reservation>(`/reservations/${id}/cancel`).then((r) => r.data)
+  cancel(id: number | string, reason?: string) {
+    return apiClient
+      .post<Reservation>(`/reservations/${id}/cancel`, reason ? { reason } : undefined)
+      .then((r) => r.data)
   },
 }
