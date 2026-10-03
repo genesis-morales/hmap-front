@@ -26,7 +26,7 @@ export function ResetPasswordPage() {
     }
     setLoading(true)
     try {
-      await authApi.resetPassword({ token, password: values.password })
+      await authApi.resetPassword({ token, newPassword: values.password })
       message.success('Contraseña actualizada. Ya puedes iniciar sesión.')
       navigate('/login')
     } catch (error) {
